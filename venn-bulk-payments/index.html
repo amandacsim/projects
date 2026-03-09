@@ -1357,46 +1357,82 @@ a { text-decoration: none; color: inherit; }
     <!-- ══════════════════════════════════════════
          S7 — FULL SUCCESS
     ══════════════════════════════════════════ -->
-    <div class="page-wrap" id="page-s7-success">
-      <div class="page-center" style="max-width:640px;">
-        <div style="text-align:center;padding:32px 0 28px;">
-          <div class="success-icon-wrap">
-            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+    <div class="page-wrap" id="page-s7-success" style="padding: 40px 200px;">
+      <div style="display:flex;flex-direction:column;gap:40px;">
+
+        <!-- Main success card -->
+        <div style="border:1px solid #d9d9d9;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:24px;align-items:center;background:#fff;">
+
+          <!-- Heading -->
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;width:100%;">
+            <div style="font-size:32px;line-height:48px;">✅</div>
+            <div style="font-size:20px;font-weight:600;color:#0d0d0d;line-height:26px;">Your transfer has been sent</div>
+            <div style="font-size:14px;color:#0d0d0d;line-height:21px;">We've sent your <span style="color:#2a9d5c;font-weight:500;">$25,358.25 CAD</span> batch to 9 recipients</div>
           </div>
-          <div style="font-size:22px;font-weight:700;color:var(--grey-900);margin-bottom:6px;">Your transfer has been sent</div>
-          <div style="font-size:14px;color:var(--grey-500);">We've sent your <span style="color:var(--teal);font-weight:500;">$25,358.25 CAD</span> batch to 9 recipients</div>
+
+          <!-- Stat cards -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;">
+            <div style="background:#fff;border:1px solid #2a9d5c;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:30px;font-weight:600;color:#2a9d5c;text-align:center;line-height:36px;letter-spacing:-0.9px;">9</div>
+              <div style="font-size:14px;color:#6b6b6b;text-align:center;line-height:21px;">Sent successfully</div>
+            </div>
+            <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:30px;font-weight:600;color:#0d0d0d;text-align:center;line-height:36px;letter-spacing:-0.9px;">—</div>
+              <div style="font-size:14px;color:#6b6b6b;text-align:center;line-height:21px;">Processing</div>
+            </div>
+            <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:30px;font-weight:600;color:#0d0d0d;text-align:center;line-height:36px;letter-spacing:-0.9px;">—</div>
+              <div style="font-size:14px;color:#6b6b6b;text-align:center;line-height:21px;">Failed</div>
+            </div>
+          </div>
+
+          <!-- Settlement + Batch table -->
+          <div style="background:#fff;border:1px solid #e0e0e0;border-radius:8px;overflow:hidden;width:100%;">
+            <div style="background:#fafafa;border-bottom:1px solid #f5f5f5;padding:9.5px 18px;">
+              <span style="font-size:11px;font-weight:600;color:#b3b3b3;text-transform:uppercase;letter-spacing:1.32px;">Settlement Timeline</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid #fafafa;font-size:14px;line-height:21px;">
+              <span style="color:#717171;">EFT payments (6 recipients)</span>
+              <span style="color:#1a1a1a;">1-2 business days</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-bottom:1px solid #fafafa;font-size:14px;line-height:21px;">
+              <span style="color:#717171;">Wire transfers (3 recipients)</span>
+              <span style="color:#1a1a1a;">Same or next business day</span>
+            </div>
+            <div style="background:#fafafa;border-top:1px solid #f5f5f5;border-bottom:1px solid #f5f5f5;padding:9.5px 18px;">
+              <span style="font-size:11px;font-weight:600;color:#b3b3b3;text-transform:uppercase;letter-spacing:1.32px;">Batch Details</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:15px 18px;font-size:14px;line-height:21px;">
+              <span style="color:#717171;">Reference</span>
+              <span style="color:#1a1a1a;">VB-2026-03-0010</span>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+            <div style="display:flex;gap:16px;align-items:center;">
+              <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d9d9d9;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;background:#fff;cursor:pointer;font-family:var(--font);" onclick="goTo('s0-entry')">New Transfer</button>
+              <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d9d9d9;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;background:#fff;cursor:pointer;font-family:var(--font);">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v8M5 7.5l3 3 3-3M3 12.5h10" stroke="#3d3d3d" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download Receipt
+              </button>
+            </div>
+            <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#fff;background:#0d0d0d;cursor:pointer;font-family:var(--font);" onclick="goTo('overview')">View All Transactions</button>
+          </div>
+
         </div>
 
-        <div class="outcome-grid">
-          <div class="outcome-cell ok">
-            <div class="outcome-num ok">9</div>
-            <div class="outcome-label">Sent successfully</div>
-          </div>
-          <div class="outcome-cell proc">
-            <div class="outcome-num" style="color:var(--grey-300);">—</div>
-            <div class="outcome-label">Processing</div>
-          </div>
-          <div class="outcome-cell">
-            <div class="outcome-num" style="color:var(--grey-300);">—</div>
-            <div class="outcome-label">Failed</div>
-          </div>
+        <!-- Bottom nav row -->
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <!-- Back (hidden / opacity-0 per Figma) -->
+          <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d9d9d9;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;background:#fff;cursor:pointer;font-family:var(--font);opacity:0;pointer-events:none;">Back</button>
+          <!-- Try error state -->
+          <a style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;cursor:pointer;font-family:var(--font);" onclick="goTo('s7-partial')">
+            Try error state
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 12.5L12.5 3.5M12.5 3.5H6.5M12.5 3.5V9.5" stroke="#3d3d3d" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
 
-        <div class="conf-table" style="margin-bottom:20px;">
-          <div class="conf-section-hdr">Settlement timeline</div>
-          <div class="conf-row"><span class="conf-row-label">EFT payments (6 recipients)</span><span class="conf-row-val">1–2 business days</span></div>
-          <div class="conf-row"><span class="conf-row-label">Wire transfers (3 recipients)</span><span class="conf-row-val">Same or next business day</span></div>
-          <div class="conf-section-hdr">Batch details</div>
-          <div class="conf-row"><span class="conf-row-label">Batch label</span><span class="conf-row-val">November vendor payments</span></div>
-          <div class="conf-row"><span class="conf-row-label">Reference</span><span class="conf-row-val" style="font-variant-numeric:tabular-nums;color:var(--grey-400);">VB-2024-11-0042</span></div>
-        </div>
-
-        <div class="btn-row" style="margin-top:0;">
-          <button class="btn btn-secondary" onclick="goTo('s0-entry')">New transfer</button>
-          <button class="btn btn-ghost">↓ Download receipt</button>
-          <div class="spacer"></div>
-          <button class="btn btn-primary" onclick="goTo('overview')">View transactions →</button>
-        </div>
       </div>
     </div>
 
@@ -1404,83 +1440,102 @@ a { text-decoration: none; color: inherit; }
     <!-- ══════════════════════════════════════════
          S7-E — PARTIAL FAILURE
     ══════════════════════════════════════════ -->
-    <div class="page-wrap" id="page-s7-partial">
-      <div class="page-center" style="max-width:760px;">
-        <div style="margin-bottom:20px;">
-          <div style="font-size:20px;font-weight:700;color:var(--grey-900);margin-bottom:4px;">Batch partially completed</div>
-          <div style="font-size:13.5px;color:var(--grey-500);">November vendor payments · $25,358.25 CAD submitted</div>
-        </div>
+    <div class="page-wrap" id="page-s7-partial" style="padding: 40px 200px;">
+      <div style="display:flex;flex-direction:column;gap:40px;">
 
-        <div class="outcome-grid">
-          <div class="outcome-cell ok">
-            <div class="outcome-num ok">7</div>
-            <div class="outcome-label">Sent successfully</div>
+        <!-- Main error card -->
+        <div style="border:1px solid #d9d9d9;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:24px;align-items:center;background:#fff;">
+
+          <!-- Heading -->
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;width:100%;">
+            <div style="font-size:20px;font-weight:600;color:#0d0d0d;line-height:26px;">Batch partially completed</div>
+            <div style="font-size:14px;color:#0d0d0d;line-height:21px;">November vendor payments · $25,358.25 CAD submitted</div>
           </div>
-          <div class="outcome-cell proc">
-            <div class="outcome-num" style="color:var(--grey-600);font-size:28px;">1</div>
-            <div class="outcome-label">Still processing</div>
+
+          <!-- Stat cards -->
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;">
+            <div style="background:#fff;border:1px solid #2a9d5c;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:30px;font-weight:600;color:#2a9d5c;text-align:center;line-height:36px;letter-spacing:-0.9px;">7</div>
+              <div style="font-size:14px;color:#6b6b6b;text-align:center;line-height:21px;">Sent successfully</div>
+            </div>
+            <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:30px;font-weight:600;color:#0d0d0d;text-align:center;line-height:36px;letter-spacing:-0.9px;">1</div>
+              <div style="font-size:14px;color:#6b6b6b;text-align:center;line-height:21px;">Still processing</div>
+            </div>
+            <div style="background:#fff;border:1px solid #d93025;border-radius:10px;padding:16px;display:flex;flex-direction:column;gap:8px;">
+              <div style="font-size:30px;font-weight:600;color:#d93025;text-align:center;line-height:36px;letter-spacing:-0.9px;">2</div>
+              <div style="font-size:14px;color:#6b6b6b;text-align:center;line-height:21px;">Failed</div>
+            </div>
           </div>
-          <div class="outcome-cell fail">
-            <div class="outcome-num fail">2</div>
-            <div class="outcome-label">Failed</div>
+
+          <!-- Error banner -->
+          <div style="background:#fff8f7;border:1px solid #d93025;border-radius:10px;padding:13px 17px;display:flex;align-items:center;gap:12px;width:100%;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;"><path d="M6.86 2.57L1.21 12a1 1 0 00.86 1.5h10.86a1 1 0 00.86-1.5L8.14 2.57a1 1 0 00-1.72 0M8 6v3M8 11h.01" stroke="#d93025" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <div style="font-size:14px;color:#0d0d0d;line-height:21px;"><strong style="font-weight:600;">2 payments failed.</strong> Funds have been returned to your CAD account. See the details below and choose how to proceed.</div>
           </div>
+
+          <!-- Failed payments table -->
+          <div style="background:#fff;border:1px solid #e0e0e0;border-radius:10px;overflow:hidden;width:100%;">
+            <!-- Header -->
+            <div style="display:grid;grid-template-columns:136px 130px 1fr auto;background:#fafafa;border-bottom:1px solid #f5f5f5;">
+              <div style="padding:10px 14px;font-size:11px;font-weight:600;color:#9e9e9e;text-transform:uppercase;letter-spacing:1.32px;">Recipient</div>
+              <div style="padding:10px 14px;font-size:11px;font-weight:600;color:#9e9e9e;text-transform:uppercase;letter-spacing:1.32px;">Amount</div>
+              <div style="padding:10px 14px;font-size:11px;font-weight:600;color:#9e9e9e;text-transform:uppercase;letter-spacing:1.32px;">Reason</div>
+              <div style="padding:10px 14px;font-size:11px;font-weight:600;color:#9e9e9e;text-transform:uppercase;letter-spacing:1.32px;">Action</div>
+            </div>
+            <!-- Row 1 -->
+            <div style="display:grid;grid-template-columns:136px 130px 1fr auto;background:#fff8f7;border-bottom:1px solid #fafafa;">
+              <div style="padding:12px 16px;border-left:3px solid #d93025;font-size:14px;font-weight:500;color:#0d0d0d;display:flex;align-items:center;">Jane Smith</div>
+              <div style="padding:12px 14px;font-size:14px;color:#0d0d0d;display:flex;align-items:center;">$850.00 USD</div>
+              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:3px;justify-content:center;">
+                <div style="font-size:14px;color:#0d0d0d;line-height:21px;">Account number rejected by receiving bank</div>
+                <div style="font-size:12px;color:#d93025;line-height:18px;">⚠ Verify account details and retry</div>
+              </div>
+              <div style="padding:12px 14px;display:flex;align-items:center;gap:5px;">
+                <button style="border:1px solid #d9d9d9;border-radius:6px;padding:5px 11px;font-size:12px;color:#0d0d0d;background:#fff;cursor:pointer;font-family:var(--font);">Retry</button>
+                <button style="border:none;border-radius:6px;padding:5px 10px;font-size:12px;color:#0d0d0d;background:transparent;cursor:pointer;font-family:var(--font);">Edit</button>
+              </div>
+            </div>
+            <!-- Row 2 -->
+            <div style="display:grid;grid-template-columns:136px 130px 1fr auto;background:#fff8f7;">
+              <div style="padding:12px 16px;border-left:3px solid #d93025;font-size:14px;font-weight:500;color:#0d0d0d;display:flex;align-items:center;">Green Peak Ltd.</div>
+              <div style="padding:12px 14px;font-size:14px;color:#0d0d0d;display:flex;align-items:center;">$4,500.00 CAD</div>
+              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:3px;justify-content:center;">
+                <div style="font-size:14px;color:#0d0d0d;line-height:21px;">Recipient bank unavailable (holiday closure)</div>
+                <div style="font-size:12px;color:#d93025;line-height:18px;">⚠ Recipient bank closed for holiday</div>
+              </div>
+              <div style="padding:12px 14px;display:flex;align-items:center;gap:5px;">
+                <button style="border:1px solid #d9d9d9;border-radius:6px;padding:5px 11px;font-size:12px;color:#0d0d0d;background:#fff;cursor:pointer;font-family:var(--font);">Retry</button>
+                <button style="border:none;border-radius:6px;padding:5px 10px;font-size:12px;color:#0d0d0d;background:transparent;cursor:pointer;font-family:var(--font);">Schedule</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons -->
+          <div style="display:flex;justify-content:space-between;align-items:center;width:100%;">
+            <div style="display:flex;gap:16px;align-items:center;">
+              <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d93025;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#d93025;background:#fff8f7;cursor:pointer;font-family:var(--font);">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 2v8M5 7.5l3 3 3-3M3 12.5h10" stroke="#d93025" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                Download Failed Report (.csv)
+              </button>
+              <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d9d9d9;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;background:#fff;cursor:pointer;font-family:var(--font);">Retry Failed Payments</button>
+            </div>
+            <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#fff;background:#0d0d0d;cursor:pointer;font-family:var(--font);" onclick="goTo('overview')">View All Transactions</button>
+          </div>
+
         </div>
 
-        <div class="banner banner-err" style="margin-bottom:14px;">
-          <div class="banner-icon">⚠</div>
-          <div class="banner-body"><strong>2 payments failed.</strong> Funds have been returned to your CAD account. See the details below and choose how to proceed.</div>
+        <!-- Bottom nav row -->
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <!-- Back (hidden / opacity-0 per Figma) -->
+          <button style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid #d9d9d9;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;background:#fff;cursor:pointer;font-family:var(--font);opacity:0;pointer-events:none;">Back</button>
+          <!-- Try success state -->
+          <a style="display:inline-flex;align-items:center;justify-content:center;gap:8px;border:1px solid transparent;border-radius:10px;padding:13px 21px;font-size:14px;font-weight:500;color:#3d3d3d;cursor:pointer;font-family:var(--font);" onclick="goTo('s7-success')">
+            Try success state
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3.5 12.5L12.5 3.5M12.5 3.5H6.5M12.5 3.5V9.5" stroke="#3d3d3d" stroke-width="1.33" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
         </div>
 
-        <div class="section-title" style="margin-bottom:8px;">Failed payments</div>
-        <div class="table-wrap" style="margin-bottom:16px;">
-          <table class="tbl">
-            <thead>
-              <tr>
-                <th>Recipient</th>
-                <th>Amount</th>
-                <th>Reason</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr class="row-err">
-                <td style="font-weight:500;">Jane Smith</td>
-                <td class="td-mono">$850.00 USD</td>
-                <td>
-                  <div style="font-size:12.5px;">Account number rejected by receiving bank</div>
-                  <div class="td-sub">⚠ Verify account details and retry</div>
-                </td>
-                <td>
-                  <div style="display:flex;gap:5px;">
-                    <button class="btn btn-secondary btn-sm">Retry</button>
-                    <button class="btn btn-ghost btn-sm">Edit</button>
-                  </div>
-                </td>
-              </tr>
-              <tr class="row-err">
-                <td style="font-weight:500;">Green Peak Ltd.</td>
-                <td class="td-mono">$4,500.00 CAD</td>
-                <td>
-                  <div style="font-size:12.5px;">Recipient bank unavailable (holiday closure)</div>
-                  <div class="td-sub warn">⚡ Retry tomorrow — no action needed today</div>
-                </td>
-                <td>
-                  <div style="display:flex;gap:5px;">
-                    <button class="btn btn-secondary btn-sm">Retry</button>
-                    <button class="btn btn-ghost btn-sm">Schedule</button>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
-        <div class="btn-row" style="margin-top:0;">
-          <button class="btn btn-danger btn-sm">↓ Download failure report (.csv)</button>
-          <button class="btn btn-secondary">Retry failed payments</button>
-          <div class="spacer"></div>
-          <button class="btn btn-primary" onclick="goTo('overview')">View all transactions →</button>
-        </div>
       </div>
     </div>
 
