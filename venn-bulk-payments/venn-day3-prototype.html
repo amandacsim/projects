@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venn — Bulk Payments</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;450;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="venn-components.css">
+<script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
+<style>
+
+/* ─── VENN DESIGN TOKENS ───────────────────────── */
+:root {
+  /* Core */
+  --teal:        #00B896;
+  --teal-light:  #E6F8F4;
+  --teal-mid:    #CCF0E9;
+  --teal-dark:   #008F74;
+  --black:       #0F0F0F;
+  --grey-900:    #1A1A1A;
+  --grey-700:    #4A4A4A;
+  --grey-500:    #717171;
+  --grey-400:    #9E9E9E;
+  --grey-200:    #E0E0E0;
+  --grey-100:    #F5F5F5;
+  --grey-50:     #FAFAFA;
+  --white:       #FFFFFF;
+
+  /* Semantic */
+  --error:       #D93025;
+  --error-light: #FEF0EE;
+  --error-mid:   #FBCAC7;
+  --warning:     #E67E22;
+  --warn-light:  #FEF8EE;
+  --warn-mid:    #FAD9A8;
+  --success:     #00B896;
+  --success-light: #E6F8F4;
+
+  /* App shell */
+  --sidebar-w:   256px;
+  --content-max: 880px;
+
+  /* Typography */
+  --font: 'Inter', -apple-system, sans-serif;
+}
+
+/* ─── RESET ─────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: var(--font); background: var(--white); color: var(--grey-900); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+button { font-family: var(--font); cursor: pointer; border: none; background: none; }
+input, select, textarea { font-family: var(--font); }
+a { text-decoration: none; color: inherit; }
+
+/* ─── APP SHELL ──────────────────────────────────── */
+.app { display: flex; min-height: 100vh; }
+
+/* SIDEBAR / NAVBAR */
+.sidebar {
+  width: var(--sidebar-w); flex-shrink: 0;
+  background: #fbfbfb; border-right: 1px solid #e5e7eb;
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; height: 100vh;
+  z-index: 50; overflow-y: auto;
+}
+/* Logo row */
+.sidebar-logo-row {
+  height: 57px; padding: 0 16px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.sidebar-logo-img { height: 24px; width: auto; display: block; }
+.sidebar-layout-icon { width: 16px; height: 16px; display: block; flex-shrink: 0; }
+.nav-icon-img { width: 16px; height: 16px; display: block; }
+/* Nav area */
+.sidebar-nav { flex: 1; padding: 20px 16px; display: flex; flex-direction: column; gap: 4px; overflow-y: auto; }
+.sidebar-nav-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
+.sidebar-nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: 10px; font-size: 14px; color: #0d0d0d;
+  cursor: pointer; transition: background .12s; line-height: 21px;
+}
+.sidebar-nav-item:hover { background: #f3f4f6; }
+.sidebar-nav-item.active { background: #f3f4f6; }
+.sidebar-nav-item .ni-icon { width: 16px; height: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: #6a7282; font-size: 13px; }
+.sidebar-nav-item .ni-label { flex: 1; }
+.sidebar-nav-item .ni-badge { background: #d0fae5; color: #007a55; font-size: 12px; font-weight: 500; padding: 2px 8px; border-radius: 999px; line-height: 16px; }
+.sidebar-section-text { font-size: 14px; color: #6a7282; padding: 0 12px 4px; }
+.sidebar-sub-items { display: flex; flex-direction: column; gap: 4px; padding-left: 28px; }
+.sidebar-sub-item-new {
+  padding: 8px 12px; border-radius: 10px; font-size: 14px; color: #6b6b6b; cursor: pointer; transition: background .12s; line-height: 21px;
+}
+.sidebar-sub-item-new:hover { background: #f3f4f6; color: #0d0d0d; }
+/* Account footer */
+.sidebar-account-new {
+  border-top: 1px solid #e5e7eb; padding: 17px 8px;
+  display: flex; align-items: center; gap: 12px; cursor: pointer; flex-shrink: 0;
+}
+.account-avatar-new { width: 32px; height: 32px; border-radius: 999px; background: #e5e7eb; color: #0a0a0a; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+.account-info-new { flex: 1; min-width: 0; }
+.account-name-new { font-size: 14px; color: #0a0a0a; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 21px; }
+.account-org-new { font-size: 12px; color: #6a7282; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 18px; }
+/* Legacy sidebar classes (used by non-prepare screens) */
+.sidebar-logo { padding: 20px 18px 16px; font-size: 16px; font-weight: 700; color: var(--grey-900); border-bottom: 1px solid var(--grey-100); display: flex; align-items: center; justify-content: space-between; }
+.sidebar-logo .logo-mark { width: 28px; height: 28px; background: var(--teal); border-radius: 6px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: 13px; letter-spacing: -.5px; }
+.sidebar-logo .logo-name { font-weight: 700; font-size: 15px; color: var(--grey-900); }
+.sidebar-logo .logo-badge { font-size: 10px; background: var(--grey-100); color: var(--grey-500); padding: 2px 7px; border-radius: 10px; font-weight: 500; }
+.sidebar-section { padding: 16px 0 6px; }
+.sidebar-section-label { font-size: 10px; font-weight: 600; color: var(--grey-400); letter-spacing: .07em; text-transform: uppercase; padding: 0 18px; margin-bottom: 4px; }
+.sidebar-item { display: flex; align-items: center; gap: 9px; padding: 7px 18px; font-size: 13px; color: var(--grey-700); cursor: pointer; position: relative; transition: background .12s; border-left: 2px solid transparent; }
+.sidebar-item:hover { background: var(--grey-50); }
+.sidebar-item.active { color: var(--grey-900); font-weight: 500; background: var(--grey-50); border-left-color: var(--teal); }
+.sidebar-item .si-icon { width: 16px; height: 16px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; color: var(--grey-400); font-size: 13px; }
+.sidebar-item.active .si-icon { color: var(--teal); }
+.sidebar-item .si-sub { font-size: 11px; color: var(--grey-400); margin-left: auto; }
+.sidebar-sub-item { padding: 5px 18px 5px 43px; font-size: 12.5px; color: var(--grey-500); cursor: pointer; transition: background .12s; }
+.sidebar-sub-item:hover { background: var(--grey-50); color: var(--grey-900); }
+.sidebar-sub-item.active { color: var(--teal); font-weight: 500; }
+.sidebar-divider { height: 1px; background: var(--grey-100); margin: 8px 0; }
+.sidebar-account { margin-top: auto; padding: 14px 18px; border-top: 1px solid var(--grey-100); display: flex; align-items: center; gap: 9px; }
+.account-avatar { width: 28px; height: 28px; background: var(--grey-900); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 11px; font-weight: 600; flex-shrink: 0; }
+.account-info { flex: 1; overflow: hidden; }
+.account-name { font-size: 12px; font-weight: 500; color: var(--grey-900); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.account-org { font-size: 11px; color: var(--grey-400); }
+
+/* MAIN CONTENT */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* TOPBAR */
+.topbar {
+  height: 52px; background: var(--white); border-bottom: 1px solid var(--grey-200);
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px; position: sticky; top: 0; z-index: 40;
+}
+.topbar-breadcrumb { display: flex; align-items: center; gap: 6px; font-size: 13px; color: var(--grey-400); }
+.topbar-breadcrumb .crumb-active { color: var(--grey-900); font-weight: 500; }
+.topbar-breadcrumb .crumb-sep { color: var(--grey-300); }
+.topbar-actions { display: flex; align-items: center; gap: 10px; }
+.topbar-btn {
+  font-size: 12px; padding: 6px 14px; border-radius: 6px;
+  border: 1px solid var(--grey-200); color: var(--grey-700); background: var(--white);
+  cursor: pointer; transition: all .12s;
+}
+.topbar-btn:hover { border-color: var(--grey-400); color: var(--grey-900); }
+
+/* PAGE */
+.page-wrap { flex: 1; padding: 32px; display: none; }
+.page-wrap.active { display: block; }
+.page-center { max-width: var(--content-max); margin: 0 auto; }
+
+/* ─── STEPPER ─────────────────────────────────── */
+.stepper { display: flex; align-items: center; gap: 0; margin-bottom: 40px; }
+.step-item { display: flex; align-items: center; gap: 8px; }
+.step-dot {
+  width: 20px; height: 20px; border-radius: 50%; border: 2px solid var(--grey-200);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 10px; font-weight: 600; color: var(--grey-400); flex-shrink: 0;
+  transition: all .2s;
+}
+.step-item.done .step-dot   { border-color: var(--teal); background: var(--teal); color: white; }
+.step-item.active .step-dot { border-color: var(--grey-900); background: var(--grey-900); color: white; }
+.step-label { font-size: 12.5px; color: var(--grey-400); font-weight: 400; white-space: nowrap; }
+.step-item.active .step-label { color: var(--grey-900); font-weight: 500; }
+.step-item.done .step-label   { color: var(--grey-500); }
+.step-connector { flex: 1; height: 1.5px; background: var(--grey-200); margin: 0 10px; min-width: 32px; transition: background .2s; }
+.step-connector.done { background: var(--teal); }
+
+/* ─── BAR STEPPER (prepare screen) ───────────── */
+.bar-stepper { display: flex; gap: 6px; margin-bottom: 32px; }
+.bar-step { flex: 1; height: 4px; border-radius: 2px; background: var(--grey-200); }
+.bar-step.filled { background: var(--grey-900); }
+
+/* ─── CONTENT CARD ───────────────────────────── */
+.content-card { background: #fff; border: 1px solid #e7e7e7; border-radius: 20px; padding: 40px; }
+
+/* ─── BACK LINK ──────────────────────────────── */
+.back-link { font-size: 13px; color: var(--grey-500); cursor: pointer; margin-bottom: 24px; display: inline-flex; align-items: center; gap: 6px; }
+.back-link:hover { color: var(--grey-900); }
+
+/* ─── PAGE TITLE ─────────────────────────────── */
+.page-title { font-size: 24px; font-weight: 600; color: var(--grey-900); margin-bottom: 4px; }
+.page-subtitle { font-size: 13.5px; color: var(--grey-500); margin-bottom: 28px; }
+
+/* ─── CARDS / CONTAINERS ─────────────────────── */
+.card {
+  background: var(--white); border: 1px solid var(--grey-200);
+  border-radius: 10px; padding: 24px;
+}
+.card-sm { padding: 16px 20px; }
+.card + .card { margin-top: 14px; }
+
+/* ─── FORM ───────────────────────────────────── */
+.field { margin-bottom: 16px; }
+.field:last-child { margin-bottom: 0; }
+.label { font-size: 12px; font-weight: 500; color: var(--grey-700); margin-bottom: 6px; display: flex; align-items: center; gap: 4px; }
+.label .req { color: var(--error); }
+.input {
+  width: 100%; border: 1.5px solid var(--grey-200); border-radius: 7px;
+  padding: 9px 12px; font-size: 13.5px; color: var(--grey-900);
+  background: var(--white); transition: border-color .15s, box-shadow .15s;
+  outline: none;
+}
+.input:focus { border-color: var(--grey-900); box-shadow: 0 0 0 3px rgba(0,0,0,0.06); }
+.input.err { border-color: var(--error); background: var(--error-light); }
+.input.err:focus { box-shadow: 0 0 0 3px rgba(217,48,37,0.1); }
+.input-hint { font-size: 11.5px; color: var(--grey-400); margin-top: 5px; }
+.input-err-msg { font-size: 11.5px; color: var(--error); margin-top: 5px; display: flex; align-items: center; gap: 4px; }
+.field-row { display: grid; gap: 12px; }
+.field-row.cols-2 { grid-template-columns: 1fr 1fr; }
+.field-row.cols-3 { grid-template-columns: 1fr 1fr 1fr; }
+
+/* ─── BUTTONS ─────────────────────────────────── */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: 7px; font-size: 13.5px; font-weight: 500; padding: 9px 18px;
+  transition: all .15s; cursor: pointer; white-space: nowrap; border: 1.5px solid;
+}
+.btn-primary { background: var(--black); border-color: var(--black); color: var(--white); }
+.btn-primary:hover { background: #2d2d2d; }
+.btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-secondary { background: var(--white); border-color: var(--grey-200); color: var(--grey-900); }
+.btn-secondary:hover { border-color: var(--grey-400); background: var(--grey-50); }
+.btn-ghost { background: transparent; border-color: transparent; color: var(--grey-500); }
+.btn-ghost:hover { color: var(--grey-900); background: var(--grey-50); }
+.btn-danger { background: var(--error-light); border-color: var(--error-mid); color: var(--error); }
+.btn-danger:hover { background: #fce0dd; }
+.btn-teal { background: var(--teal); border-color: var(--teal); color: white; }
+.btn-teal:hover { background: var(--teal-dark); }
+.btn-sm { padding: 6px 12px; font-size: 12px; border-radius: 6px; }
+.btn-lg { padding: 12px 24px; font-size: 14.5px; border-radius: 8px; }
+.btn-full { width: 100%; }
+.btn-row { display: flex; align-items: center; gap: 10px; margin-top: 24px; }
+.btn-row .spacer { flex: 1; }
+
+/* ─── BADGE / TAG ─────────────────────────────── */
+.badge {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 4px;
+  white-space: nowrap;
+}
+.badge-teal  { background: var(--teal-light); color: var(--teal-dark); }
+.badge-grey  { background: var(--grey-100); color: var(--grey-600); border: 1px solid var(--grey-200); }
+.badge-err   { background: var(--error-light); color: var(--error); }
+.badge-warn  { background: var(--warn-light); color: var(--warning); }
+.badge-cad   { background: #f8f8f8; color: #3d3d3d; padding: 3px 10px; }
+.badge-usd   { background: #f8f8f8; color: #3d3d3d; padding: 3px 10px; }
+.badge-eur   { background: #F3EDFC; color: #6A1B9A; }
+.badge-gbp   { background: #F0FFF4; color: #1B5E20; }
+.badge-eft   { background: var(--grey-100); color: var(--grey-700); }
+.badge-wire  { background: #FFF8E1; color: #E65100; }
+
+/* ─── BANNERS ─────────────────────────────────── */
+.banner {
+  border-radius: 8px; padding: 12px 16px; display: flex; gap: 10px;
+  align-items: flex-start; font-size: 13px; border: 1px solid;
+}
+.banner-err  { background: var(--error-light);  border-color: var(--error-mid); color: var(--grey-900); }
+.banner-warn { background: var(--warn-light);   border-color: var(--warn-mid); color: var(--grey-900); }
+.banner-ok   { background: var(--success-light); border-color: var(--teal-mid); color: var(--grey-900); }
+.banner-icon { font-size: 15px; flex-shrink: 0; margin-top: 0px; }
+.banner-body { flex: 1; line-height: 1.55; }
+.banner-body strong { font-weight: 600; color: var(--grey-900); }
+.banner-body a { color: var(--grey-900); font-weight: 500; text-decoration: underline; cursor: pointer; }
+.banner + .banner, .banner + .card, .card + .banner { margin-top: 12px; }
+
+/* ─── UPLOAD ZONE ─────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--grey-200); border-radius: 10px;
+  padding: 48px 32px; text-align: center; cursor: pointer;
+  transition: all .15s; background: var(--white);
+}
+.upload-zone:hover { border-color: var(--grey-400); background: var(--grey-50); }
+.upload-zone.drag  { border-color: var(--teal); background: var(--teal-light); }
+.upload-zone.error { border-color: var(--error); background: var(--error-light); }
+.uz-icon { font-size: 36px; margin-bottom: 14px; }
+.uz-title { font-size: 16px; font-weight: 600; color: var(--grey-900); margin-bottom: 6px; }
+.uz-sub { font-size: 13px; color: var(--grey-500); line-height: 1.55; }
+.uz-sub a { color: var(--grey-900); font-weight: 500; text-decoration: underline; }
+.uz-meta { font-size: 11.5px; color: var(--grey-400); margin-top: 14px; }
+
+/* ─── PROGRESS ────────────────────────────────── */
+.progress-bar { height: 4px; background: var(--grey-100); border-radius: 2px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 2px; transition: width .4s ease; background: var(--teal); }
+.progress-fill.black { background: var(--black); }
+
+/* ─── SUMMARY BAR ─────────────────────────────── */
+.summary-bar {
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  background: var(--white); border: 1px solid var(--grey-200); border-radius: 10px;
+  overflow: hidden; margin-bottom: 16px;
+}
+.sum-cell { padding: 14px 18px; border-right: 1px solid var(--grey-100); }
+.sum-cell:last-child { border-right: none; }
+.sum-label { font-size: 11px; font-weight: 500; color: var(--grey-400); text-transform: uppercase; letter-spacing: .05em; margin-bottom: 5px; }
+.sum-val { font-size: 20px; font-weight: 600; color: var(--grey-900); line-height: 1; }
+.sum-val.err { color: var(--error); }
+.sum-val.ok  { color: var(--teal); }
+.sum-sub { font-size: 11px; color: var(--grey-400); margin-top: 3px; }
+
+/* ─── TABLE ───────────────────────────────────── */
+.table-wrap { background: var(--white); border: 1px solid var(--grey-200); border-radius: 10px; overflow: hidden; }
+.table-toolbar {
+  display: flex; align-items: center; gap: 8px; padding: 12px 14px;
+  border-bottom: 1px solid var(--grey-100);
+}
+.search-wrap { position: relative; flex: 1; max-width: 280px; }
+.search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; pointer-events: none; }
+.search-icon img { width: 16px; height: 16px; opacity: 0.4; }
+.search-input {
+  width: 100%; border: 1.5px solid var(--grey-200); border-radius: 6px;
+  padding: 6px 10px 6px 32px; font-size: 12.5px; color: var(--grey-900); outline: none;
+}
+.search-input:focus { border-color: var(--grey-400); }
+.filter-btn {
+  display: flex; align-items: center; gap: 5px; padding: 6px 12px;
+  border: 1.5px solid var(--grey-200); border-radius: 6px; font-size: 12px;
+  color: var(--grey-600); background: var(--white); cursor: pointer; transition: all .12s;
+}
+.filter-btn:hover { border-color: var(--grey-400); }
+.filter-btn.active { border-color: var(--grey-400); color: var(--grey-700); background: var(--grey-50); }
+.filter-btn--error.active { border-color: var(--error); color: var(--error); background: var(--error-light); }
+.filter-btn .count-badge {
+  background: var(--error); color: white; border-radius: 10px;
+  font-size: 10px; font-weight: 600; padding: 1px 6px;
+}
+.tbl { width: 100%; border-collapse: collapse; }
+.tbl th {
+  font-size: 11px; font-weight: 600; color: var(--grey-400); text-align: left;
+  padding: 10px 14px; background: var(--grey-50); border-bottom: 1px solid var(--grey-100);
+  text-transform: uppercase; letter-spacing: .05em; white-space: nowrap;
+}
+.tbl td { padding: 11px 14px; border-bottom: 1px solid var(--grey-50); font-size: 13px; vertical-align: middle; color: var(--grey-900); }
+.tbl tr:last-child td { border-bottom: none; }
+.tbl tr:hover td { background: var(--grey-50); }
+.tbl tr.row-err td { background: #fff8f7; }
+.tbl tr.row-err:first-child td { }
+.tbl tr.row-err td:first-child { border-left: 3px solid var(--error); }
+.tbl tr.row-warn td { background: #fffdf5; }
+.tbl tr.row-warn td:first-child { border-left: 3px solid var(--warning); }
+.tbl tr.row-editing td { background: #f8f8f8; box-shadow: inset 0 0 0 1.5px var(--grey-200); }
+.tbl tr.row-editing td:first-child { border-left: 3px solid var(--grey-900); }
+.td-sub { font-size: 11.5px; color: var(--error); margin-top: 3px; display: flex; align-items: center; gap: 4px; }
+.td-sub.warn { color: var(--warning); }
+.td-mono { font-variant-numeric: tabular-nums; }
+.tbl-action-btn {
+  font-size: 12px; padding: 4px 10px; border-radius: 5px;
+  border: 1.5px solid var(--grey-200); color: var(--grey-700); background: var(--white);
+  cursor: pointer; transition: all .12s;
+}
+.tbl-action-btn:hover { border-color: var(--grey-400); color: var(--grey-900); }
+.tbl-action-btn.danger { border-color: var(--error-mid); color: var(--error); background: var(--error-light); }
+.cb { width: 15px; height: 15px; border-radius: 3.5px; border: 1.5px solid var(--grey-300); background: var(--white); flex-shrink: 0; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; }
+.cb.checked { background: var(--grey-900); border-color: var(--grey-900); }
+.cb.checked::after { content: ''; width: 7px; height: 4px; border-left: 1.5px solid white; border-bottom: 1.5px solid white; transform: rotate(-45deg) translateY(-1px); display: block; }
+
+/* ─── INLINE EDIT ─────────────────────────────── */
+.inline-edit-row td { padding: 0 !important; }
+.inline-edit-wrap { padding: 16px 14px; background: var(--white); border-top: 1.5px solid var(--grey-200); border-bottom: 1.5px solid var(--grey-200); }
+.inline-edit-hdr { font-size: 13px; font-weight: 600; color: var(--grey-900); margin-bottom: 14px; display: flex; align-items: center; justify-content: space-between; }
+.inline-edit-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 14px; }
+.inline-edit-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ─── RECIPIENT CARD ──────────────────────────── */
+.recipient-option {
+  border: 1.5px solid var(--grey-200); border-radius: 8px; padding: 14px 16px;
+  cursor: pointer; transition: all .15s; display: flex; gap: 12px; align-items: flex-start;
+}
+.recipient-option:hover  { border-color: var(--grey-400); }
+.recipient-option.selected { border-color: var(--grey-900); background: var(--grey-50); }
+.recipient-option.usd-card { flex-direction: column; gap: 0; }
+.recipient-option.usd-card--active { border: 1.5px solid var(--error); background: #fff8f7; }
+.usd-top { display: flex; gap: 12px; align-items: flex-start; width: 100%; }
+.insuf-inline-table { border-radius: 6px; overflow: hidden; margin-top: 10px; }
+.insuf-inline-hdr { font-size: 12px; color: var(--error); padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--grey-100); }
+.insuf-inline-row { display: flex; justify-content: space-between; font-size: 12px; color: #1a1a1a; padding: 8px 12px; background: #fff; border-bottom: 1px solid var(--grey-100); }
+.insuf-inline-row--last { border-bottom: none; }
+.insuf-divider { height: 1px; background: #b3b3b3; margin: 10px 0; }
+.insuf-send-partial { display: flex; gap: 12px; align-items: flex-start; cursor: pointer; }
+.insuf-checkbox { width: 18px; height: 18px; flex-shrink: 0; border: 1px solid #b3b3b3; border-radius: 5px; background: #fff; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all .15s; }
+.insuf-checkbox.checked { background: #0d0d0d; border-color: #0d0d0d; }
+.insuf-checkbox.checked::after { content: ''; display: block; width: 10px; height: 10px; background: url("data:image/svg+xml,%3Csvg width='10' height='10' viewBox='0 0 10 10' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M8.33 2.5L3.75 7.08L1.67 5' stroke='white' stroke-width='1.33' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/contain no-repeat; }
+.partial-split-table { border: 1px solid var(--error); border-radius: 6px; overflow: hidden; margin-top: 10px; margin-bottom: 10px; }
+.partial-split-row { display: flex; justify-content: space-between; align-items: center; background: white; padding: 4px 12px; min-height: 35px; }
+.partial-split-row--border { border-bottom: 1px solid #f8f8f8; }
+.partial-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.partial-dot--green { background: #2a9d5c; }
+.partial-dot--grey { background: #b3b3b3; }
+.skipped-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+.skipped-bar-label { font-size: 11px; font-weight: 600; color: #6b6b6b; text-transform: uppercase; letter-spacing: .07em; }
+.skipped-detail-toggle { font-size: 12px; color: #3d3d3d; text-decoration: underline; cursor: pointer; }
+.skipped-payment-card { border: 1px solid var(--error); border-radius: 4px; padding: 9px 13px; background: white; display: flex; justify-content: space-between; align-items: center; }
+.skipped-explain { border: 1px solid var(--grey-200); border-radius: 10px; padding: 13px 17px; background: white; font-size: 14px; color: #0d0d0d; line-height: 21px; }
+.rec-radio {
+  width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--grey-300);
+  flex-shrink: 0; margin-top: 1px; display: flex; align-items: center; justify-content: center;
+  transition: all .15s;
+}
+.rec-radio.on { border-color: var(--grey-900); }
+.rec-radio.on::after { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--grey-900); display: block; }
+.rec-label { font-size: 13px; font-weight: 500; color: var(--grey-900); }
+.rec-sub   { font-size: 12px; color: var(--grey-500); margin-top: 2px; font-variant-numeric: tabular-nums; }
+.rec-sub.low { color: var(--error); }
+
+/* ─── CONFIRMATION ROWS ───────────────────────── */
+.conf-table { background: var(--white); border: 1px solid var(--grey-200); border-radius: 10px; overflow: hidden; }
+.conf-section-hdr { font-size: 11px; font-weight: 600; color: var(--grey-400); text-transform: uppercase; letter-spacing: .07em; background: var(--grey-50); padding: 9px 18px; border-bottom: 1px solid var(--grey-100); }
+.conf-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--grey-50); font-size: 13.5px; }
+.conf-row:last-child { border-bottom: none; }
+.conf-row-label { color: var(--grey-500); }
+.conf-row-val { font-weight: 500; color: var(--grey-900); font-variant-numeric: tabular-nums; }
+.conf-row-val.big { font-size: 18px; font-weight: 700; }
+.conf-row-val.teal { color: var(--teal); }
+
+/* ─── FX LOCK ─────────────────────────────────── */
+.fx-lock {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--grey-50); border: 1px solid var(--grey-200); border-radius: 7px;
+  padding: 9px 14px; font-size: 12.5px; color: var(--grey-700);
+}
+.fx-lock strong { color: var(--grey-900); font-weight: 500; }
+.fx-timer { margin-left: auto; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--warning); font-size: 13px; }
+
+/* ─── OUTCOME GRID ───────────────────────────── */
+.outcome-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+.outcome-cell { background: var(--white); border: 1px solid var(--grey-200); border-radius: 10px; padding: 20px 16px; text-align: center; }
+.outcome-cell.ok   { border-color: var(--teal-mid); }
+.outcome-cell.fail { border-color: var(--error-mid); }
+.outcome-cell.proc { border-color: var(--grey-200); }
+.outcome-num { font-size: 32px; font-weight: 700; line-height: 1; color: var(--grey-900); }
+.outcome-num.ok   { color: var(--teal); }
+.outcome-num.fail { color: var(--error); }
+.outcome-label { font-size: 12px; color: var(--grey-400); margin-top: 5px; }
+
+/* ─── SUCCESS ICON ───────────────────────────── */
+.success-icon-wrap {
+  width: 64px; height: 64px; border-radius: 50%; background: var(--teal-light);
+  display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;
+}
+.success-icon-wrap svg { color: var(--teal); }
+
+/* ─── LOADING ─────────────────────────────────── */
+.spinner {
+  width: 18px; height: 18px; border: 2px solid var(--grey-200);
+  border-top-color: var(--teal); border-radius: 50%;
+  animation: spin .8s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── CHECKLIST ───────────────────────────────── */
+.checklist { display: flex; flex-direction: column; gap: 10px; }
+.check-item { display: flex; align-items: center; gap: 10px; font-size: 13px; }
+.check-dot { width: 18px; height: 18px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+.check-dot.done { background: var(--teal-light); color: var(--teal); }
+.check-dot.active { background: var(--grey-100); }
+.check-dot.pending { background: transparent; border: 1.5px solid var(--grey-200); }
+.check-text { color: var(--grey-700); }
+.check-text.done { color: var(--grey-500); }
+.check-text.active { color: var(--grey-900); font-weight: 500; }
+
+/* ─── TWO-COL ─────────────────────────────────── */
+.two-col { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; align-items: stretch; }
+.two-col-eq { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* ─── TEMPLATE CARD ───────────────────────────── */
+.tmpl-card {
+  border: 1.5px solid var(--grey-200); border-radius: 9px; padding: 16px;
+  cursor: pointer; transition: all .15s;
+}
+.tmpl-card:hover { border-color: var(--grey-900); }
+.tmpl-card.selected { border-color: var(--grey-900); background: var(--grey-50); }
+.tmpl-title { font-size: 13.5px; font-weight: 600; color: var(--grey-900); margin-bottom: 3px; }
+.tmpl-desc  { font-size: 12px; color: var(--grey-500); margin-bottom: 12px; }
+.tmpl-cols  { display: flex; flex-wrap: wrap; gap: 4px; }
+.col-chip { font-size: 10.5px; background: var(--grey-100); border: 1px solid var(--grey-200); border-radius: 3px; padding: 2px 7px; color: var(--grey-600); }
+.col-chip.req { background: #FFF0E6; border-color: #FBCFB0; color: #C05000; }
+
+/* ─── FORMAT BOX ──────────────────────────────── */
+.format-box { background: var(--white); border: 1px solid var(--grey-200); border-radius: 9px; padding: 16px 18px; }
+.format-rule { display: flex; gap: 8px; align-items: flex-start; font-size: 12.5px; color: var(--grey-700); margin-bottom: 8px; line-height: 1.5; }
+.format-rule:last-child { margin-bottom: 0; }
+.format-rule .check { color: var(--teal); font-size: 13px; flex-shrink: 0; margin-top: 1px; }
+.code-example { font-size: 11px; font-family: 'Courier New', monospace; background: var(--grey-50); border: 1px solid var(--grey-100); border-radius: 5px; padding: 8px 10px; color: var(--grey-600); line-height: 1.7; margin-top: 10px; }
+
+/* ─── INSUFFICIENT FUNDS ──────────────────────── */
+.insuf-block { background: var(--error-light); border: 1.5px solid var(--error-mid); border-radius: 9px; padding: 18px; margin-bottom: 14px; }
+.insuf-title { font-size: 14px; font-weight: 600; color: var(--error); margin-bottom: 12px; display: flex; align-items: center; gap: 7px; }
+.insuf-rows { border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+.insuf-row { display: flex; justify-content: space-between; padding: 8px 12px; font-size: 12.5px; background: white; border-bottom: 1px solid var(--error-mid); }
+.insuf-row:last-child { border-bottom: none; }
+.insuf-gap { font-weight: 600; color: var(--error); }
+.insuf-actions { display: flex; gap: 8px; }
+
+/* ─── METHOD PICKER ───────────────────────────── */
+.method-opts { border: 1.5px solid var(--grey-200); border-radius: 8px; overflow: hidden; }
+.method-opt { display: flex; align-items: flex-start; gap: 11px; padding: 13px 15px; border-bottom: 1px solid var(--grey-100); cursor: pointer; transition: background .12s; }
+.method-opt:last-child { border-bottom: none; }
+.method-opt:hover { background: var(--grey-50); }
+.method-opt.selected { background: var(--grey-50); }
+.m-label { font-size: 13px; font-weight: 500; color: var(--grey-900); }
+.m-detail { font-size: 11.5px; color: var(--grey-500); margin-top: 2px; }
+.m-note { font-size: 11px; color: var(--warning); margin-top: 3px; }
+
+/* ─── DIVIDER ─────────────────────────────────── */
+.divider { height: 1px; background: var(--grey-100); margin: 20px 0; }
+
+/* ─── SECTION TITLE ───────────────────────────── */
+.section-title { font-size: 13px; font-weight: 600; color: var(--grey-900); margin-bottom: 10px; }
+.section-sub   { font-size: 12.5px; color: var(--grey-500); margin-bottom: 14px; }
+
+/* ─── PROTOTYPE NAV ───────────────────────────── */
+.proto-nav {
+  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: var(--grey-900); border-radius: 100px; padding: 6px 8px;
+  display: flex; gap: 2px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.pn-btn {
+  font-size: 11px; font-weight: 500; color: rgba(255,255,255,0.55);
+  padding: 5px 11px; border-radius: 100px; cursor: pointer;
+  transition: all .15s; white-space: nowrap; background: transparent;
+}
+.pn-btn:hover { color: rgba(255,255,255,0.85); }
+.pn-btn.active { background: white; color: var(--grey-900); }
+
+/* ─── EMPTY STATE ─────────────────────────────── */
+.empty-center { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 340px; text-align: center; }
+.empty-icon { font-size: 40px; margin-bottom: 16px; opacity: .4; }
+.empty-title { font-size: 15px; font-weight: 600; color: var(--grey-700); margin-bottom: 6px; }
+.empty-sub { font-size: 13px; color: var(--grey-400); max-width: 320px; line-height: 1.6; }
+
+/* ─── ANIMATIONS ──────────────────────────────── */
+.fade-in { animation: fadeIn .2s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* hidden util */
+.hidden { display: none !important; }
+
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ════════ SIDEBAR / NAVBAR ════════ -->
+  <nav class="sidebar">
+    <div class="sidebar-logo-row">
+      <img src="Assets/venn-logo.png" alt="Venn" class="sidebar-logo-img">
+      <img src="Assets/Icons/layout-right.svg" alt="" class="sidebar-layout-icon">
+    </div>
+
+    <div class="sidebar-nav">
+      <!-- Tasks -->
+      <div class="sidebar-nav-group">
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/clipboard-check.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Tasks</span>
+          <span class="ni-badge">8</span>
+        </div>
+      </div>
+
+      <!-- Platform section -->
+      <div class="sidebar-nav-group">
+        <div class="sidebar-section-text">Platform</div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/monitor-01.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Dashboard</span>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/list.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Transactions</span>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/building-08.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Accounts</span>
+        </div>
+        <!-- Transfers — active with sub-items -->
+        <div class="sidebar-nav-item active" id="nav-send">
+          <span class="ni-icon"><img src="Assets/Icons/span.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Transfers</span>
+        </div>
+        <div class="sidebar-sub-items">
+          <div class="sidebar-sub-item-new">Payables</div>
+          <div class="sidebar-sub-item-new">Recipients</div>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/file-06.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Invoices</span>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/credit-card-02.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Cards</span>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/pie-chart-01.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Reporting</span>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/bar-chart-07.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Investments</span>
+        </div>
+        <div class="sidebar-nav-item">
+          <span class="ni-icon"><img src="Assets/Icons/layout-grid-02.svg" alt="" class="nav-icon-img"></span>
+          <span class="ni-label">Accounting</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="sidebar-account-new">
+      <div class="account-avatar-new">AS</div>
+      <div class="account-info-new">
+        <div class="account-name-new">Amanda Sim</div>
+        <div class="account-org-new">Amanda's Company</div>
+      </div>
+      <img src="Assets/Icons/chevron-right.svg" alt="" style="width:16px;height:16px;flex-shrink:0;">
+    </div>
+  </nav>
+
+  <!-- ════════ MAIN ════════ -->
+  <main class="main">
+
+    <!-- ══════════════════════════════════════════
+         S0 — ENTRY
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap active" id="page-s0-entry">
+      <div class="page-center entry-page-center">
+        <div class="back-link" onclick="goTo('s0-entry')">← Back to Transfers</div>
+        <div class="entry-card">
+
+          <!-- Step progress bar -->
+          <div class="entry-progress-bar">
+            <div class="entry-step filled"></div>
+            <div class="entry-step"></div>
+            <div class="entry-step"></div>
+            <div class="entry-step"></div>
+            <div class="entry-step"></div>
+          </div>
+
+          <!-- Title -->
+          <p class="entry-title">What type of transfer?</p>
+
+          <!-- Selection cards -->
+          <div class="transfer-grid">
+
+            <!-- Bulk transfer -->
+            <div class="transfer-card" onclick="goTo('s1-prepare')">
+              <img src="Assets/Icons/file-06.svg" alt="" class="transfer-icon">
+              <span class="transfer-label">Bulk transfer</span>
+              <span class="transfer-badge-new">New</span>
+            </div>
+
+            <!-- One time transfer -->
+            <div class="transfer-card">
+              <img src="https://www.figma.com/api/mcp/asset/54234656-a191-4007-8762-08e91574fc92" alt="" class="transfer-icon">
+              <span class="transfer-label">One time transfer</span>
+            </div>
+
+            <!-- Scheduled transfer -->
+            <div class="transfer-card">
+              <img src="https://www.figma.com/api/mcp/asset/d68bf389-8ca5-4ea6-9b50-8aa11cc5a656" alt="" class="transfer-icon">
+              <span class="transfer-label">Scheduled transfer</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S1 — PREPARE / PRE-UPLOAD
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s1-prepare">
+      <div class="page-center">
+        <div class="back-link" onclick="goTo('s0-entry')">← Back to Transfers</div>
+
+        <div class="content-card">
+          <div class="bar-stepper">
+            <div class="bar-step filled"></div>
+            <div class="bar-step filled"></div>
+            <div class="bar-step"></div>
+            <div class="bar-step"></div>
+            <div class="bar-step"></div>
+          </div>
+
+          <div class="page-title text-center">Prepare your file</div>
+          <div class="page-subtitle text-center">Download a template and fill in your payment details, or skip ahead if your file is ready.</div>
+
+          <div class="two-col">
+            <div class="prepare-col">
+              <div class="section-title">Choose a template</div>
+              <div class="tmpl-list">
+                <div class="tmpl-card selected" id="tmpl-standard">
+                  <div class="tmpl-header">
+                    <div class="tmpl-title">Standard Bank Transfer</div>
+                    <span class="badge badge-teal">Recommended</span>
+                  </div>
+                  <div class="tmpl-desc">EFT and Wire transfers in CAD, USD, EUR, or GBP</div>
+                  <div class="tmpl-cols">
+                    <span class="col-chip req">recipient_name *</span>
+                    <span class="col-chip req">account_number *</span>
+                    <span class="col-chip req">amount *</span>
+                    <span class="col-chip req">currency *</span>
+                    <span class="col-chip">transit_number</span>
+                    <span class="col-chip">payment_method</span>
+                    <span class="col-chip">reference</span>
+                  </div>
+                  <button class="btn btn-secondary btn-sm tmpl-download" onclick="event.stopPropagation()">↓ Download .CSV</button>
+                </div>
+                <div class="tmpl-card" id="tmpl-saved" onclick="toggleTemplate()">
+                  <div class="tmpl-title">Saved Recipients</div>
+                  <div class="tmpl-desc">Use your existing Venn contacts — account details pre-filled</div>
+                  <div class="tmpl-cols">
+                    <span class="col-chip req">recipient_id *</span>
+                    <span class="col-chip req">amount *</span>
+                    <span class="col-chip req">currency *</span>
+                    <span class="col-chip">reference</span>
+                  </div>
+                  <button class="btn btn-secondary btn-sm tmpl-download" onclick="event.stopPropagation()">↓ Download .CSV</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="prepare-col">
+              <div class="section-title">Format requirements</div>
+              <div class="format-card">
+
+                <div class="fmt-rule">
+                  <svg class="fmt-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.667 8.667l2.666 2.666 7.334-7.333" stroke="#2A9D5C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <p class="fmt-text">File must be a <strong>.csv</strong> format (max 1,000 rows)</p>
+                </div>
+                <div class="fmt-rule">
+                  <svg class="fmt-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.667 8.667l2.666 2.666 7.334-7.333" stroke="#2A9D5C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <p class="fmt-text">First row must be column headers</p>
+                </div>
+                <div class="fmt-rule">
+                  <svg class="fmt-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.667 8.667l2.666 2.666 7.334-7.333" stroke="#2A9D5C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <p class="fmt-text">Currency as ISO 3-letter code: <strong>CAD, USD, EUR, GBP</strong></p>
+                </div>
+                <div class="fmt-rule">
+                  <svg class="fmt-check" width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2.667 8.667l2.666 2.666 7.334-7.333" stroke="#2A9D5C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                  <p class="fmt-text">Payment method: <strong>EFT</strong> or <strong>Wire</strong> (defaults to EFT if blank)</p>
+                </div>
+
+                <div class="example-row">
+                  <span class="example-row-label">EXAMPLE ROW</span>
+                  <p class="example-row-text">Acme Corp, 003-12345, 1200.00, CAD, 00300, EFT, Q3 invoice</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <!-- Buttons row -->
+          <div class="page-buttons">
+            <button class="btn-back" onclick="goTo('s0-entry')">Back</button>
+            <button class="btn-upload" onclick="goTo('s2-upload')">
+              My file is ready, upload now
+              <img src="Assets/Icons/arrow-right.svg" alt="" class="btn-upload-icon">
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S2 — UPLOAD (empty + error state)
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s2-upload">
+      <div class="page-center entry-page-center flex-col">
+
+        <div class="back-link" onclick="goTo('s0-entry')">← Back to Transfers</div>
+
+        <div class="entry-card">
+          <!-- Step progress bar: 3 of 5 filled -->
+          <div class="entry-progress-bar">
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step"></div>
+            <div class="entry-step"></div>
+          </div>
+
+          <h1 class="entry-title">Upload your CSV</h1>
+          <p class="upload-subtitle">Drag and drop your file or click to browse.</p>
+
+          <!-- Normal upload state -->
+          <div id="upload-normal">
+            <div class="upload-drop-zone" onclick="showUploadState('uploading')" id="dropzone">
+              <svg class="upload-drop-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 16.2422C2.79401 15.435 2 14.0602 2 12.5C2 10.1564 3.79151 8.23129 6.07974 8.01937C6.54781 5.17213 9.02024 3 12 3C14.9798 3 17.4522 5.17213 17.9203 8.01937C20.2085 8.23129 22 10.1564 22 12.5C22 14.0602 21.206 15.435 20 16.2422M15 16L12 13M12 13L9 16M12 13V21" stroke="#6B6B6B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p class="upload-drop-title">Drop your CSV here</p>
+              <p class="upload-drop-sub">or <a onclick="showUploadState('uploading')">browse to upload</a></p>
+              <p class="upload-drop-meta">Accepted: .csv · .xlsx &nbsp;·&nbsp; Max 500 payments</p>
+            </div>
+          </div>
+
+          <!-- Upload file format error state -->
+          <div id="upload-file-error" class="hidden">
+            <div class="upload-err-banner banner-mb">
+              <div class="banner-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke="var(--error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+              <div class="banner-body"><strong>We couldn't read your file.</strong> The column "acct_no" doesn't match an expected field. Required columns: <em>recipient_name, account_number, amount, currency</em>. <a onclick="goTo('s1-prepare')">View format guide</a></div>
+            </div>
+            <div class="upload-drop-zone upload-drop-zone--error">
+              <svg class="upload-drop-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="var(--error)" stroke-width="2"/>
+                <path d="M12 8v4M12 16h.01" stroke="var(--error)" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <p class="upload-drop-title" style="color:var(--error);">payments_export.csv</p>
+              <p class="upload-drop-sub">This file has format issues. <a onclick="showUploadState('normal')" style="font-weight:700;text-decoration:underline;">Try a different file</a> or fix and re-upload.</p>
+            </div>
+          </div>
+
+          <!-- Uploading / parsing state -->
+          <div id="upload-uploading" class="hidden">
+            <div class="upload-progress-card">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9.33329 1.51303V4.26673C9.33329 4.64009 9.33329 4.82678 9.40596 4.96938C9.46987 5.09483 9.57186 5.19681 9.6973 5.26073C9.83991 5.33339 10.0266 5.33339 10.4 5.33339H13.1537M10.6666 8.66668H5.33329M10.6666 11.3333H5.33329M6.66663 6.00001H5.33329M9.33329 1.33334H5.86663C4.74652 1.33334 4.18647 1.33334 3.75865 1.55133C3.38232 1.74308 3.07636 2.04904 2.88461 2.42536C2.66663 2.85319 2.66663 3.41324 2.66663 4.53334V11.4667C2.66663 12.5868 2.66663 13.1468 2.88461 13.5747C3.07636 13.951 3.38232 14.2569 3.75865 14.4487C4.18647 14.6667 4.74652 14.6667 5.86663 14.6667H10.1333C11.2534 14.6667 11.8135 14.6667 12.2413 14.4487C12.6176 14.2569 12.9236 13.951 13.1153 13.5747C13.3333 13.1468 13.3333 12.5868 13.3333 11.4667V5.33334L9.33329 1.33334Z" stroke="#4A5565" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <p class="upload-progress-filename">November_vendors.csv</p>
+              <p class="upload-progress-status">Uploading…</p>
+              <div class="progress-bar" style="max-width:320px;width:100%;">
+                <div class="progress-fill" id="upload-bar" style="width:0%;"></div>
+              </div>
+              <span class="upload-progress-pct" id="upload-pct">0%</span>
+            </div>
+          </div>
+
+          <div class="page-buttons">
+            <button class="btn-back" onclick="goTo('s1-prepare')">Back</button>
+            <!-- Uploading state: try error shortcut -->
+            <button class="btn-proto-link hidden" id="btn-try-error" onclick="showUploadState('file-error')">
+              Try error state
+              <svg class="btn-proto-link-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+            <!-- Error state: return to happy path -->
+            <button class="btn-proto-link hidden" id="btn-try-success" onclick="showUploadState('normal')">
+              Try success state
+              <svg class="btn-proto-link-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S3 — VALIDATING
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s3-validating">
+      <div class="page-center" style="max-width:480px;">
+        <div style="text-align:center;padding:20px 0 28px;">
+          <div style="font-size:32px;margin-bottom:14px;">✅</div>
+          <div style="font-size:17px;font-weight:600;color:var(--grey-900);margin-bottom:4px;" id="val-title">November_vendors.csv uploaded</div>
+          <div style="font-size:13px;color:var(--grey-500);margin-bottom:24px;" id="val-sub">47 rows detected — validating now</div>
+          <div class="progress-bar" style="margin:0 auto 10px;max-width:320px;">
+            <div class="progress-fill" id="val-bar" style="width:0%;"></div>
+          </div>
+          <div style="font-size:12px;color:var(--grey-400);" id="val-label">Starting validation…</div>
+        </div>
+
+        <div class="card">
+          <div class="checklist" id="val-checklist">
+            <div class="check-item" id="vck-1">
+              <div class="check-dot done">✓</div>
+              <div class="check-text done">File format valid</div>
+            </div>
+            <div class="check-item" id="vck-2">
+              <div class="check-dot done">✓</div>
+              <div class="check-text done">47 rows parsed successfully</div>
+            </div>
+            <div class="check-item" id="vck-3">
+              <div class="check-dot active"><div class="spinner" style="width:12px;height:12px;border-width:1.5px;"></div></div>
+              <div class="check-text active">Validating account details…</div>
+            </div>
+            <div class="check-item" id="vck-4">
+              <div class="check-dot pending"></div>
+              <div class="check-text" style="color:var(--grey-400);">Checking funding account balance…</div>
+            </div>
+            <div class="check-item" id="vck-5">
+              <div class="check-dot pending"></div>
+              <div class="check-text" style="color:var(--grey-400);">Identifying payment methods…</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S4 — REVIEW TABLE (with errors)
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s4-review">
+      <div class="page-center entry-page-center flex-col" style="max-width:1180px;">
+
+        <div class="back-link" onclick="goTo('s0-entry')">← Back to Transfers</div>
+
+        <div class="entry-card">
+
+          <!-- Step progress bar: 4 of 5 filled -->
+          <div class="entry-progress-bar">
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step"></div>
+          </div>
+
+          <h1 class="entry-title">Review</h1>
+          <p class="upload-subtitle">47 rows detected - validating now</p>
+
+          <!-- Error banner -->
+          <div class="upload-err-banner" id="review-error-banner">
+            <div class="banner-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke="var(--error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </div>
+            <div class="banner-body"><strong>3 payments need attention</strong> before you can confirm. Fix or remove them to proceed, or <a onclick="goTo('s5-confirm')"><strong>send the 9 clean rows now.</strong></a></div>
+          </div>
+
+          <!-- Summary bar -->
+          <div class="summary-bar">
+            <div class="sum-cell">
+              <div class="sum-label">Payments</div>
+              <div class="sum-val">12</div>
+              <div class="sum-sub">recipients</div>
+            </div>
+            <div class="sum-cell">
+              <div class="sum-label">Total</div>
+              <div class="sum-val">$32,450</div>
+              <div class="sum-sub">CAD + USD equiv.</div>
+            </div>
+            <div class="sum-cell">
+              <div class="sum-label">Currencies</div>
+              <div class="sum-val" style="font-size:13px;display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">
+                <span class="badge badge-usd">🇺🇸 USD</span>
+                <span class="badge badge-cad">🇨🇦 CAD</span>
+              </div>
+            </div>
+            <div class="sum-cell">
+              <div class="sum-label">Errors</div>
+              <div class="sum-val err" id="error-count">3</div>
+              <div class="sum-sub" id="error-sub">need attention</div>
+            </div>
+          </div>
+
+          <!-- Toolbar + table -->
+          <div class="table-wrap">
+            <div class="table-toolbar">
+              <div class="search-wrap">
+                <div class="search-icon"><img src="Assets/Icons/search-md.svg" alt=""></div>
+                <input class="search-input" placeholder="Search recipient…" />
+              </div>
+              <button class="filter-btn filter-btn--error" id="filter-errors-btn" onclick="toggleFilter('errors')">
+                ⚠ Errors only <span class="count-badge" id="filter-badge">3</span>
+              </button>
+              <button class="filter-btn active" id="filter-all-btn" onclick="toggleFilter('all')">All (12)</button>
+              <div style="margin-left:auto;">
+                <button class="btn btn-secondary btn-sm">↓ Export</button>
+              </div>
+            </div>
+
+            <table class="tbl" id="review-table">
+              <thead>
+                <tr>
+                  <th style="width:36px;"><div class="cb checked"></div></th>
+                  <th style="width:36px;">#</th>
+                  <th>Recipient</th>
+                  <th>Amount</th>
+                  <th>Currency</th>
+                  <th>Method</th>
+                  <th>Reference</th>
+                  <th>Status</th>
+                  <th style="width:140px;"></th>
+                </tr>
+              </thead>
+              <tbody id="review-tbody">
+
+                <!-- Error row 1: missing account number -->
+                <tr class="row-err" id="row-2" data-state="error">
+                  <td><div class="cb"></div></td>
+                  <td style="color:var(--grey-400);font-size:11px;">02</td>
+                  <td>
+                    <div style="font-weight:500;">Jane Smith</div>
+                    <div class="td-sub">⚠ Missing account number</div>
+                  </td>
+                  <td class="td-mono">$850.00</td>
+                  <td><span class="badge badge-usd">🇺🇸 USD</span></td>
+                  <td><span class="badge badge-wire">Wire</span></td>
+                  <td style="color:var(--grey-500);font-size:12px;">Oct invoice</td>
+                  <td><span class="badge badge-err">⚠ Error</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px;">
+                      <button class="tbl-action-btn" onclick="openEdit('row-2')">Edit</button>
+                      <button class="tbl-action-btn danger" onclick="removeRow('row-2')">Remove</button>
+                    </div>
+                  </td>
+                </tr>
+                <!-- inline edit for row-2 -->
+                <tr class="hidden" id="edit-row-2">
+                  <td colspan="9">
+                    <div class="inline-edit-wrap fade-in">
+                      <div class="inline-edit-hdr">
+                        Editing: Jane Smith
+                        <span class="badge badge-err">Row 2</span>
+                      </div>
+                      <div class="inline-edit-grid">
+                        <div class="field"><div class="label">Recipient Name</div><input class="input" value="Jane Smith" /></div>
+                        <div class="field"><div class="label">Account Number <span class="req">*</span></div><input class="input err" placeholder="e.g. 1234567" id="edit-account-2" oninput="checkEditFix('2')" /><div class="input-err-msg">⚠ Required — enter the recipient's bank account number</div></div>
+                        <div class="field"><div class="label">Transit / Routing Number</div><input class="input" value="021000021" /></div>
+                        <div class="field"><div class="label">Amount</div><input class="input" value="850.00" /></div>
+                        <div class="field"><div class="label">Currency</div><select class="input"><option selected>USD</option><option>CAD</option><option>EUR</option></select></div>
+                        <div class="field"><div class="label">Reference</div><input class="input" value="Oct invoice" /></div>
+                      </div>
+                      <div class="inline-edit-actions">
+                        <button class="btn btn-primary btn-sm" id="save-2-btn" onclick="saveEdit('2')" disabled>Save &amp; Validate</button>
+                        <button class="btn btn-ghost btn-sm" onclick="closeEdit('row-2')">Cancel</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Valid row -->
+                <tr data-state="valid">
+                  <td><div class="cb checked"></div></td>
+                  <td style="color:var(--grey-400);font-size:11px;">03</td>
+                  <td style="font-weight:500;">Acme Corp</td>
+                  <td class="td-mono">$1,200.00</td>
+                  <td><span class="badge badge-cad">🇨🇦 CAD</span></td>
+                  <td><span class="badge badge-eft">EFT</span></td>
+                  <td style="color:var(--grey-500);font-size:12px;">Q3 services</td>
+                  <td><span class="badge badge-teal">✓ Valid</span></td>
+                  <td><button class="tbl-action-btn" onclick="openEdit('row-3')">Edit</button></td>
+                </tr>
+                <tr class="hidden" id="edit-row-3"><td colspan="9"><div class="inline-edit-wrap fade-in"><div class="inline-edit-hdr">Editing: Acme Corp</div><div class="inline-edit-grid"><div class="field"><div class="label">Recipient Name</div><input class="input" value="Acme Corp" /></div><div class="field"><div class="label">Account Number</div><input class="input" value="003-00123456" /></div><div class="field"><div class="label">Transit Number</div><input class="input" value="00300" /></div><div class="field"><div class="label">Amount</div><input class="input" value="1200.00" /></div><div class="field"><div class="label">Currency</div><select class="input"><option selected>CAD</option><option>USD</option></select></div><div class="field"><div class="label">Reference</div><input class="input" value="Q3 services" /></div></div><div class="inline-edit-actions"><button class="btn btn-primary btn-sm" onclick="closeEdit('row-3')">Save &amp; Validate</button><button class="btn btn-ghost btn-sm" onclick="closeEdit('row-3')">Cancel</button></div></div></td></tr>
+
+                <!-- Error row 2: invalid transit -->
+                <tr class="row-err" id="row-7" data-state="error">
+                  <td><div class="cb"></div></td>
+                  <td style="color:var(--grey-400);font-size:11px;">03</td>
+                  <td>
+                    <div style="font-weight:500;">Green Peak Ltd.</div>
+                    <div class="td-sub">⚠ Transit number must be 5 digits (got "003")</div>
+                  </td>
+                  <td class="td-mono">$500.00</td>
+                  <td><span class="badge badge-cad">🇨🇦 CAD</span></td>
+                  <td><span class="badge badge-eft">EFT</span></td>
+                  <td style="color:var(--grey-500);font-size:12px;">Nov retainer</td>
+                  <td><span class="badge badge-err">⚠ Error</span></td>
+                  <td>
+                    <div style="display:flex;gap:5px;">
+                      <button class="tbl-action-btn" onclick="openEdit('row-7')">Edit</button>
+                      <button class="tbl-action-btn danger" onclick="removeRow('row-7')">Remove</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr class="hidden" id="edit-row-7"><td colspan="9"><div class="inline-edit-wrap fade-in"><div class="inline-edit-hdr">Editing: Green Peak Ltd. <span class="badge badge-err">Transit number error</span></div><div class="inline-edit-grid"><div class="field"><div class="label">Recipient Name</div><input class="input" value="Green Peak Ltd." /></div><div class="field"><div class="label">Account Number</div><input class="input" value="8876543" /></div><div class="field"><div class="label">Transit Number <span class="req">*</span></div><input class="input err" value="003" oninput="checkTransitFix(this)" id="transit-7" /><div class="input-err-msg">⚠ Must be exactly 5 digits — e.g. 00300</div></div><div class="field"><div class="label">Amount</div><input class="input" value="500.00" /></div><div class="field"><div class="label">Currency</div><select class="input"><option selected>CAD</option><option>USD</option></select></div><div class="field"><div class="label">Reference</div><input class="input" value="Nov retainer" /></div></div><div class="inline-edit-actions"><button class="btn btn-primary btn-sm" id="save-7-btn" onclick="saveEditTransit()" disabled>Save &amp; Validate</button><button class="btn btn-ghost btn-sm" onclick="closeEdit('row-7')">Cancel</button></div></div></td></tr>
+
+                <!-- Warning row: multi-method -->
+                <tr class="row-warn" id="row-9" data-state="warning">
+                  <td><div class="cb"></div></td>
+                  <td style="color:var(--grey-400);font-size:11px;">04</td>
+                  <td>
+                    <div style="font-weight:500;">Torres &amp; Associates</div>
+                    <div class="td-sub warn">Recipient has 2 payment methods - select one</div>
+                  </td>
+                  <td class="td-mono">$1,200.00</td>
+                  <td><span class="badge badge-usd">🇺🇸 USD</span></td>
+                  <td><span class="badge badge-grey">Unset</span></td>
+                  <td style="color:var(--grey-500);font-size:12px;"></td>
+                  <td><span class="badge badge-warn">⚠ Choose</span></td>
+                  <td><button class="tbl-action-btn" onclick="openEdit('row-9')">Select</button></td>
+                </tr>
+                <tr class="hidden" id="edit-row-9">
+                  <td colspan="9">
+                    <div class="inline-edit-wrap fade-in">
+                      <div class="inline-edit-hdr">Torres &amp; Associates — Select payment method</div>
+                      <div style="font-size:13px;color:var(--grey-500);margin-bottom:14px;">This recipient has multiple payment methods. Choose how to send <strong>$1,200.00 USD</strong>.</div>
+                      <div class="method-opts" style="max-width:520px;margin-bottom:14px;">
+                        <div class="method-opt selected" id="method-wire" onclick="selectMethod('wire')">
+                          <div class="rec-radio on" id="mr-wire"></div>
+                          <div>
+                            <div class="m-label">Wire Transfer (USD)</div>
+                            <div class="m-detail">Account ****4821 · JP Morgan Chase · Routing 021000021</div>
+                          </div>
+                        </div>
+                        <div class="method-opt" id="method-eft" onclick="selectMethod('eft')">
+                          <div class="rec-radio" id="mr-eft"></div>
+                          <div>
+                            <div class="m-label">EFT (CAD)</div>
+                            <div class="m-detail">Account ****7203 · TD Bank · Transit 03456</div>
+                            <div class="m-note">⚡ Note: currency will change to CAD — FX conversion applies</div>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="inline-edit-actions">
+                        <button class="btn btn-primary btn-sm" onclick="resolveMethod()">Confirm Method</button>
+                        <button class="btn btn-ghost btn-sm" onclick="closeEdit('row-9')">Skip for now</button>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+
+                <!-- Valid rows -->
+                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">05</td><td style="font-weight:500;">Bright Collective</td><td class="td-mono">$2,400.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;">Design work</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
+                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">06</td><td style="font-weight:500;">NorthStar Inc.</td><td class="td-mono">$500.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;"></td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
+                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">07</td><td style="font-weight:500;">Rideau Logistics</td><td class="td-mono">$3,200.00</td><td><span class="badge badge-usd">🇺🇸 USD</span></td><td><span class="badge badge-wire">Wire</span></td><td style="color:var(--grey-500);font-size:12px;">Freight Nov</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
+                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">08</td><td style="font-weight:500;">Bluewater Media</td><td class="td-mono">$1,750.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;">Campaign</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
+                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">08</td><td style="font-weight:500;">Summit Advisory</td><td class="td-mono">$6,000.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;">Q4 retainer</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
+                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">09</td><td style="font-weight:500;">Pacific Imports</td><td class="td-mono">$2,100.00</td><td><span class="badge badge-usd">🇺🇸 USD</span></td><td><span class="badge badge-wire">Wire</span></td><td style="color:var(--grey-500);font-size:12px;">Invoice #882</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
+
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Bottom buttons -->
+          <div class="page-buttons">
+            <button class="btn-back" onclick="goTo('s2-upload')">Back</button>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="btn-back" onclick="goTo('s5-confirm')" id="send-clean-btn">Send 9 clean rows</button>
+              <button class="btn-upload" id="confirm-all-btn" onclick="checkConfirm()" disabled style="opacity:0.4;cursor:not-allowed;">
+                Review &amp; Confirm
+                <img src="Assets/Icons/arrow-right.svg" alt="" class="btn-upload-icon">
+              </button>
+            </div>
+          </div>
+
+        </div><!-- /entry-card -->
+
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S5 — CONFIRM (with insufficient funds)
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s5-confirm">
+      <div class="page-center entry-page-center flex-col" style="max-width:856px;">
+        <div class="back-link" onclick="goTo('s0-entry')">← Back to Transfers</div>
+        <div class="entry-card">
+          <!-- 5/5 progress bar -->
+          <div class="entry-progress-bar">
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+            <div class="entry-step filled"></div>
+          </div>
+
+          <h1 class="entry-title">Confirm &amp; Send</h1>
+          <p class="upload-subtitle">Review the details below. Bank transfers cannot be recalled once sent.</p>
+
+          <div class="two-col">
+            <!-- LEFT COLUMN -->
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <!-- FX lock bar -->
+              <div class="fx-lock">
+                🔒 <span>Exchange rates locked for this session</span>
+                <span class="fx-timer" id="fx-countdown">14:30</span>
+              </div>
+
+              <!-- Batch summary table -->
+              <div class="conf-table">
+                <div class="conf-section-hdr">BATCH SUMMARY</div>
+                <div class="conf-row"><span class="conf-row-label">Payments</span><span class="conf-row-val" id="conf-count">9 recipients</span></div>
+                <div class="conf-row"><span class="conf-row-label">CAD payments</span><span class="conf-row-val">$17,100.00 CAD</span></div>
+                <div class="conf-row"><span class="conf-row-label">USD payments</span><span class="conf-row-val">$6,050.00 USD</span></div>
+                <div class="conf-row"><span class="conf-row-label">USD → CAD (1 USD = 1.365 CAD)</span><span class="conf-row-val">$8,258.25 CAD</span></div>
+                <div class="conf-row"><span class="conf-row-label">Venn fees</span><span class="conf-row-val teal">$0.00</span></div>
+                <div class="conf-section-hdr">TOTAL OUTFLOW</div>
+                <div class="conf-row"><span class="conf-row-label">From CAD account</span><span class="conf-row-val big" id="conf-total">$25,358.25 CAD</span></div>
+              </div>
+
+              <!-- Irreversibility warning -->
+              <div class="banner banner-warn">
+                <div class="banner-icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#B45309" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="banner-body">Bank transfers <strong>cannot be recalled</strong> once sent. Please verify all recipient details before confirming.</div>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN -->
+            <div style="display:flex;flex-direction:column;gap:16px;">
+              <!-- Account selector -->
+              <div>
+                <div class="section-title" style="margin-bottom:10px;">Pay from account</div>
+                <div class="account-list">
+                  <!-- CAD card -->
+                  <div class="recipient-option selected" id="acc-cad" onclick="selectAccount('cad',this)">
+                    <div style="font-size:18px;">🇨🇦</div>
+                    <div>
+                      <div class="rec-label">CAD Business Account</div>
+                      <div class="rec-sub">Balance: $42,180.00 CAD</div>
+                    </div>
+                  </div>
+                  <!-- USD card — expands when selected -->
+                  <div class="recipient-option usd-card" id="acc-usd" onclick="selectAccount('usd',this)">
+                    <div class="usd-top">
+                      <div style="font-size:18px;flex-shrink:0;">🇺🇸</div>
+                      <div>
+                        <div class="rec-label">USD Business Account</div>
+                        <div class="rec-sub low">Balance: $4,700.00 USD – insufficient for USD payments</div>
+                      </div>
+                    </div>
+                    <!-- Inline shortfall (hidden by default) -->
+                    <div id="insuf-inline" style="display:none;">
+                      <div class="insuf-inline-table">
+                        <div class="insuf-inline-hdr">⚠ USD balance shortfall</div>
+                        <div class="insuf-inline-row"><span>USD payments total</span><span>$6,050.00 USD</span></div>
+                        <div class="insuf-inline-row"><span>Your USD balance</span><span>$4,700.00 USD</span></div>
+                        <div class="insuf-inline-row insuf-inline-row--last"><span style="font-weight:500;">Shortfall</span><span style="font-weight:500;color:var(--error);">−$1,350.00 USD</span></div>
+                      </div>
+                      <div class="insuf-actions" style="margin-top:10px;">
+                        <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();">↑ Top up USD</button>
+                        <button class="btn btn-secondary btn-sm" onclick="event.stopPropagation();goTo('s4-review');">Edit payments</button>
+                      </div>
+                      <div class="insuf-divider"></div>
+
+                      <!-- Checkbox: "Send what you can now" -->
+                      <div class="insuf-send-partial" onclick="event.stopPropagation();toggleSendPartial();">
+                        <div class="insuf-checkbox" id="partial-cb"></div>
+                        <div>
+                          <div style="font-size:14px;font-weight:700;color:#3d3d3d;line-height:21px;">Send what you can now</div>
+                          <div style="font-size:12px;color:#6b6b6b;line-height:18px;margin-top:2px;">Send 3 of 5 USD payments ($4,200.00 USD) within your balance. Skip the rest and fix them later.</div>
+                        </div>
+                      </div>
+
+                      <!-- Payment split (shown when checked) -->
+                      <div id="partial-split" style="display:none;">
+                        <div class="partial-split-table">
+                          <div class="partial-split-row partial-split-row--border">
+                            <div style="display:flex;gap:4px;align-items:center;">
+                              <span class="partial-dot partial-dot--green"></span>
+                              <span style="font-size:12px;color:#1a1a1a;">3 USD payments sending now</span>
+                            </div>
+                            <span style="font-size:12px;color:#1a1a1a;">$4,200.00 USD</span>
+                          </div>
+                          <div class="partial-split-row">
+                            <div style="display:flex;gap:4px;align-items:center;">
+                              <span class="partial-dot partial-dot--grey"></span>
+                              <span style="font-size:12px;color:#6b6b6b;">2 USD payments skipped</span>
+                            </div>
+                            <span style="font-size:12px;color:#6b6b6b;">$1,850.00 USD</span>
+                          </div>
+                        </div>
+
+                        <!-- Skipped payments bar -->
+                        <div class="skipped-bar">
+                          <span class="skipped-bar-label">Skipped Payments</span>
+                          <a class="skipped-detail-toggle" id="skipped-toggle" onclick="event.stopPropagation();toggleSkippedDetail();">Show details</a>
+                        </div>
+
+                        <!-- Skipped detail rows (hidden by default) -->
+                        <div id="skipped-detail" style="display:none;">
+                          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:10px;">
+                            <div class="skipped-payment-card">
+                              <div>
+                                <div style="font-size:12px;font-weight:500;color:#1a1a1a;line-height:18px;">Rideau Logistics</div>
+                                <div style="font-size:12px;color:#6b6b6b;line-height:18px;">Wire · USD</div>
+                              </div>
+                              <span style="font-size:12px;color:#1a1a1a;">$1,200.00 USD</span>
+                            </div>
+                            <div class="skipped-payment-card">
+                              <div>
+                                <div style="font-size:12px;font-weight:500;color:#1a1a1a;line-height:18px;">Pacific Imports</div>
+                                <div style="font-size:12px;color:#6b6b6b;line-height:18px;">Wire · USD</div>
+                              </div>
+                              <span style="font-size:12px;color:#1a1a1a;">$650.00 USD</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        <!-- "What happens" info banner -->
+                        <div class="skipped-explain">
+                          <strong>What happens to skipped payments?</strong> Nothing – they stay in your batch draft. After sending, you'll be taken to a summary where you can top up your USD balance and retry them, or edit and re-route through your CAD account.
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div><!-- /.account-list -->
+              </div>
+
+              <!-- Amber tip banner (hidden by default, shown when USD selected) -->
+              <div id="tip-banner" class="banner banner-warn" style="display:none;">
+                <div class="banner-icon">
+                  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 10.6667V8M8 5.33333H8.00667M14.6667 8C14.6667 11.6819 11.6819 14.6667 8 14.6667C4.3181 14.6667 1.33333 11.6819 1.33333 8C1.33333 4.3181 4.3181 1.33333 8 1.33333C11.6819 1.33333 14.6667 4.3181 14.6667 8Z" stroke="#E07B00" stroke-width="1.33333" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="banner-body"><strong>Tip:</strong> You can fund USD payments from your CAD account – Venn will convert at today's locked rate. <a onclick="selectAccount('cad', document.getElementById('acc-cad'))"><strong><u>Use CAD instead</u></strong></a></div>
+              </div>
+
+              <!-- Batch label -->
+              <div class="field">
+                <div class="label">Batch label <span style="color:var(--grey-400);font-weight:400;">(optional)</span></div>
+                <input class="input" placeholder="e.g., January vendor payments" />
+                <div class="input-hint">Used for internal tracking and transaction history</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Page buttons -->
+          <div class="page-buttons">
+            <button class="btn-back" onclick="goTo('s4-review')">Back</button>
+            <button class="btn-upload" onclick="goTo('s6-sending')" id="send-btn">
+              Send $25,358.25
+              <img src="Assets/Icons/arrow-right.svg" alt="" class="btn-upload-icon">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S6 — SENDING
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s6-sending">
+      <div class="page-center entry-page-center" style="max-width:560px;">
+        <div class="entry-card" style="align-items:center;text-align:center;">
+
+          <!-- Heading block -->
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;width:100%;">
+            <div style="font-size:32px;line-height:48px;">⏳</div>
+            <p style="font-size:20px;font-weight:600;color:#0d0d0d;line-height:26px;margin:0;">Sending 9 payments...</p>
+            <p style="font-size:14px;color:#0d0d0d;line-height:21px;margin:0;">Don't close this tab. This usually takes a few seconds.</p>
+          </div>
+
+          <!-- Progress bar + status label -->
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;width:100%;">
+            <div class="progress-bar" style="width:320px;max-width:100%;">
+              <div class="progress-fill black" id="send-bar" style="width:0%;"></div>
+            </div>
+            <p style="font-size:14px;color:#6b6b6b;line-height:21px;margin:0;" id="send-label">Authorizing batch...</p>
+          </div>
+
+          <!-- Footer note -->
+          <p style="font-size:14px;color:#6b6b6b;line-height:21px;margin:0;">
+            EFT payments typically arrive in 1–2 business days.<br>
+            Wire transfers usually arrive same or next day.
+          </p>
+
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S7 — FULL SUCCESS
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s7-success">
+      <div class="page-center" style="max-width:640px;">
+        <div style="text-align:center;padding:32px 0 28px;">
+          <div class="success-icon-wrap">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+          </div>
+          <div style="font-size:22px;font-weight:700;color:var(--grey-900);margin-bottom:6px;">Your transfer has been sent</div>
+          <div style="font-size:14px;color:var(--grey-500);">We've sent your <span style="color:var(--teal);font-weight:500;">$25,358.25 CAD</span> batch to 9 recipients</div>
+        </div>
+
+        <div class="outcome-grid">
+          <div class="outcome-cell ok">
+            <div class="outcome-num ok">9</div>
+            <div class="outcome-label">Sent successfully</div>
+          </div>
+          <div class="outcome-cell proc">
+            <div class="outcome-num" style="color:var(--grey-300);">—</div>
+            <div class="outcome-label">Processing</div>
+          </div>
+          <div class="outcome-cell">
+            <div class="outcome-num" style="color:var(--grey-300);">—</div>
+            <div class="outcome-label">Failed</div>
+          </div>
+        </div>
+
+        <div class="conf-table" style="margin-bottom:20px;">
+          <div class="conf-section-hdr">Settlement timeline</div>
+          <div class="conf-row"><span class="conf-row-label">EFT payments (6 recipients)</span><span class="conf-row-val">1–2 business days</span></div>
+          <div class="conf-row"><span class="conf-row-label">Wire transfers (3 recipients)</span><span class="conf-row-val">Same or next business day</span></div>
+          <div class="conf-section-hdr">Batch details</div>
+          <div class="conf-row"><span class="conf-row-label">Batch label</span><span class="conf-row-val">November vendor payments</span></div>
+          <div class="conf-row"><span class="conf-row-label">Reference</span><span class="conf-row-val" style="font-variant-numeric:tabular-nums;color:var(--grey-400);">VB-2024-11-0042</span></div>
+        </div>
+
+        <div class="btn-row" style="margin-top:0;">
+          <button class="btn btn-secondary" onclick="goTo('s0-entry')">New transfer</button>
+          <button class="btn btn-ghost">↓ Download receipt</button>
+          <div class="spacer"></div>
+          <button class="btn btn-primary" onclick="goTo('overview')">View transactions →</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         S7-E — PARTIAL FAILURE
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-s7-partial">
+      <div class="page-center" style="max-width:760px;">
+        <div style="margin-bottom:20px;">
+          <div style="font-size:20px;font-weight:700;color:var(--grey-900);margin-bottom:4px;">Batch partially completed</div>
+          <div style="font-size:13.5px;color:var(--grey-500);">November vendor payments · $25,358.25 CAD submitted</div>
+        </div>
+
+        <div class="outcome-grid">
+          <div class="outcome-cell ok">
+            <div class="outcome-num ok">7</div>
+            <div class="outcome-label">Sent successfully</div>
+          </div>
+          <div class="outcome-cell proc">
+            <div class="outcome-num" style="color:var(--grey-600);font-size:28px;">1</div>
+            <div class="outcome-label">Still processing</div>
+          </div>
+          <div class="outcome-cell fail">
+            <div class="outcome-num fail">2</div>
+            <div class="outcome-label">Failed</div>
+          </div>
+        </div>
+
+        <div class="banner banner-err" style="margin-bottom:14px;">
+          <div class="banner-icon">⚠</div>
+          <div class="banner-body"><strong>2 payments failed.</strong> Funds have been returned to your CAD account. See the details below and choose how to proceed.</div>
+        </div>
+
+        <div class="section-title" style="margin-bottom:8px;">Failed payments</div>
+        <div class="table-wrap" style="margin-bottom:16px;">
+          <table class="tbl">
+            <thead>
+              <tr>
+                <th>Recipient</th>
+                <th>Amount</th>
+                <th>Reason</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="row-err">
+                <td style="font-weight:500;">Jane Smith</td>
+                <td class="td-mono">$850.00 USD</td>
+                <td>
+                  <div style="font-size:12.5px;">Account number rejected by receiving bank</div>
+                  <div class="td-sub">⚠ Verify account details and retry</div>
+                </td>
+                <td>
+                  <div style="display:flex;gap:5px;">
+                    <button class="btn btn-secondary btn-sm">Retry</button>
+                    <button class="btn btn-ghost btn-sm">Edit</button>
+                  </div>
+                </td>
+              </tr>
+              <tr class="row-err">
+                <td style="font-weight:500;">Green Peak Ltd.</td>
+                <td class="td-mono">$4,500.00 CAD</td>
+                <td>
+                  <div style="font-size:12.5px;">Recipient bank unavailable (holiday closure)</div>
+                  <div class="td-sub warn">⚡ Retry tomorrow — no action needed today</div>
+                </td>
+                <td>
+                  <div style="display:flex;gap:5px;">
+                    <button class="btn btn-secondary btn-sm">Retry</button>
+                    <button class="btn btn-ghost btn-sm">Schedule</button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="btn-row" style="margin-top:0;">
+          <button class="btn btn-danger btn-sm">↓ Download failure report (.csv)</button>
+          <button class="btn btn-secondary">Retry failed payments</button>
+          <div class="spacer"></div>
+          <button class="btn btn-primary" onclick="goTo('overview')">View all transactions →</button>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         OVERVIEW PLACEHOLDER
+    ══════════════════════════════════════════ -->
+    <div class="page-wrap" id="page-overview">
+      <div class="page-center">
+        <div class="page-title">Overview</div>
+        <div class="page-subtitle">Welcome back, Jordan</div>
+        <div class="empty-center" style="min-height:280px;">
+          <div class="empty-icon">⊞</div>
+          <div class="empty-title">Dashboard</div>
+          <div class="empty-sub">This prototype focuses on the Bulk Payment flow. Use the prototype nav below to jump to any screen.</div>
+          <button class="btn btn-primary" style="margin-top:20px;" onclick="goTo('s0-entry')">Start Bulk Payment →</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════════════════════════════════════
+     PROTOTYPE NAV
+══════════════════════════════════════════ -->
+<div class="proto-nav" id="proto-nav">
+  <button class="pn-btn" onclick="goTo('s0-entry')">Entry</button>
+  <button class="pn-btn" onclick="goTo('s1-prepare')">Prepare</button>
+  <button class="pn-btn" onclick="goTo('s2-upload')">Upload</button>
+  <button class="pn-btn" onclick="goTo('s3-validating')">Validating</button>
+  <button class="pn-btn active" onclick="goTo('s4-review')">Review</button>
+  <button class="pn-btn" onclick="goTo('s5-confirm')">Confirm</button>
+  <button class="pn-btn" onclick="goTo('s6-sending')">Sending</button>
+  <button class="pn-btn" onclick="goTo('s7-success')">Success</button>
+  <button class="pn-btn" onclick="goTo('s7-partial')">Partial Fail</button>
+</div>
+
+
+<script>
+// ─── ROUTING ────────────────────────────────────────
+const PAGES = {
+  'overview':     'page-overview',
+  's0-entry':     'page-s0-entry',
+  's1-prepare':   'page-s1-prepare',
+  's2-upload':    'page-s2-upload',
+  's3-validating':'page-s3-validating',
+  's4-review':    'page-s4-review',
+  's5-confirm':   'page-s5-confirm',
+  's6-sending':   'page-s6-sending',
+  's7-success':   'page-s7-success',
+  's7-partial':   'page-s7-partial',
+};
+
+const TITLES = {
+  'overview':     'Overview',
+  's0-entry':     'Send Money',
+  's1-prepare':   'Prepare File',
+  's2-upload':    'Upload CSV',
+  's3-validating':'Validating…',
+  's4-review':    'Review Payments',
+  's5-confirm':   'Confirm & Send',
+  's6-sending':   'Sending…',
+  's7-success':   'Sent',
+  's7-partial':   'Batch Result',
+};
+
+let current = 's0-entry';
+
+function goTo(id) {
+  // hide all
+  document.querySelectorAll('.page-wrap').forEach(p => p.classList.remove('active'));
+  // show target
+  const el = document.getElementById(PAGES[id]);
+  if (el) { el.classList.add('active'); el.classList.add('fade-in'); setTimeout(() => el.classList.remove('fade-in'), 300); }
+  // update proto nav
+  document.querySelectorAll('.pn-btn').forEach(b => b.classList.remove('active'));
+  // find matching proto nav button
+  const btns = document.querySelectorAll('.pn-btn');
+  btns.forEach(b => { if (b.getAttribute('onclick') && b.getAttribute('onclick').includes(`'${id}'`)) b.classList.add('active'); });
+  current = id;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  // trigger page-specific animations
+  if (id === 's3-validating') startValidation();
+  if (id === 's6-sending')    startSending();
+  if (id === 's5-confirm')    startFXTimer();
+}
+
+// ─── UPLOAD STATES ──────────────────────────────────
+function showUploadState(state) {
+  // Hide all content states
+  document.getElementById('upload-normal').classList.add('hidden');
+  document.getElementById('upload-file-error').classList.add('hidden');
+  document.getElementById('upload-uploading').classList.add('hidden');
+
+  // Hide all right-side buttons
+  document.getElementById('btn-try-error').classList.add('hidden');
+  document.getElementById('btn-try-success').classList.add('hidden');
+
+  if (state === 'normal') {
+    document.getElementById('upload-normal').classList.remove('hidden');
+  } else if (state === 'file-error') {
+    document.getElementById('upload-file-error').classList.remove('hidden');
+    document.getElementById('btn-try-success').classList.remove('hidden');
+  } else if (state === 'uploading') {
+    document.getElementById('upload-uploading').classList.remove('hidden');
+    document.getElementById('btn-try-error').classList.remove('hidden');
+    animateUpload();
+  }
+}
+
+function animateUpload() {
+  let pct = 0;
+  const bar = document.getElementById('upload-bar');
+  const label = document.getElementById('upload-pct');
+  const interval = setInterval(() => {
+    pct += Math.random() * 18 + 4;
+    if (pct >= 100) { pct = 100; clearInterval(interval); setTimeout(() => goTo('s3-validating'), 400); }
+    bar.style.width = pct + '%';
+    label.textContent = Math.round(pct) + '%';
+  }, 140);
+}
+
+// ─── VALIDATION ANIMATION ──────────────────────────
+function startValidation() {
+  const bar = document.getElementById('val-bar');
+  const sub = document.getElementById('val-label');
+  const steps = [
+    { pct: 20, label: 'Checking file format…', delay: 300 },
+    { pct: 45, label: 'Parsing 47 rows…', delay: 900 },
+    { pct: 70, label: 'Validating account details…', delay: 1600 },
+    { pct: 90, label: 'Checking funding account balance…', delay: 2400 },
+    { pct: 100, label: 'Validation complete', delay: 3200 },
+  ];
+  steps.forEach(s => {
+    setTimeout(() => {
+      bar.style.width = s.pct + '%';
+      sub.textContent = s.label;
+      if (s.pct === 100) {
+        // update checklist
+        ['vck-3','vck-4','vck-5'].forEach((id, i) => {
+          setTimeout(() => {
+            const row = document.getElementById(id);
+            if (!row) return;
+            row.querySelector('.check-dot').className = 'check-dot done';
+            row.querySelector('.check-dot').textContent = '✓';
+            row.querySelector('.check-text').className = 'check-text done';
+          }, i * 200);
+        });
+        setTimeout(() => goTo('s4-review'), 800);
+      }
+    }, s.delay);
+  });
+}
+
+// ─── SENDING ANIMATION ─────────────────────────────
+function startSending() {
+  let pct = 0;
+  const bar = document.getElementById('send-bar');
+  const label = document.getElementById('send-label');
+  const msgs = ['Authorizing batch…','Sending to EFT network…','Processing wire transfers…','Confirming payments…','Finalizing…'];
+  let msgIdx = 0;
+  const interval = setInterval(() => {
+    pct += Math.random() * 12 + 3;
+    if (pct >= 100) {
+      pct = 100;
+      clearInterval(interval);
+      label.textContent = 'All payments sent!';
+      setTimeout(() => goTo('s7-success'), 600);
+    } else {
+      if (pct > (msgIdx+1) * 20) { label.textContent = msgs[Math.min(msgIdx++, msgs.length-1)]; }
+    }
+    bar.style.width = pct + '%';
+  }, 180);
+}
+
+// ─── FX TIMER ──────────────────────────────────────
+let fxInterval = null;
+function startFXTimer() {
+  if (fxInterval) clearInterval(fxInterval);
+  let secs = 14 * 60 + 32;
+  const el = document.getElementById('fx-countdown');
+  fxInterval = setInterval(() => {
+    if (!el) return;
+    secs = Math.max(0, secs - 1);
+    const m = Math.floor(secs / 60), s = secs % 60;
+    el.textContent = `${m}:${s.toString().padStart(2,'0')}`;
+    if (secs <= 120) el.style.color = 'var(--error)';
+    if (secs === 0) clearInterval(fxInterval);
+  }, 1000);
+}
+
+// ─── INLINE EDIT ──────────────────────────────────
+let openEdits = {};
+function openEdit(rowId) {
+  const editRow = document.getElementById('edit-' + rowId);
+  if (editRow) {
+    editRow.classList.remove('hidden');
+    openEdits[rowId] = true;
+  }
+}
+function closeEdit(rowId) {
+  const editRow = document.getElementById('edit-' + rowId);
+  if (editRow) { editRow.classList.add('hidden'); delete openEdits[rowId]; }
+}
+
+// Fix: row 2 (account number)
+let errCount = 3;
+function checkEditFix(row) {
+  const val = document.getElementById('edit-account-' + row)?.value;
+  const btn = document.getElementById('save-' + row + '-btn');
+  if (btn) { btn.disabled = !val || val.trim().length < 3; }
+}
+function saveEdit(row) {
+  const rowEl = document.getElementById('row-' + row);
+  if (rowEl) {
+    rowEl.className = '';
+    rowEl.setAttribute('data-state','valid');
+    const cells = rowEl.querySelectorAll('td');
+    // update status
+    cells[7].innerHTML = '<span class="badge badge-teal">✓ Valid</span>';
+    cells[8].innerHTML = '<button class="tbl-action-btn">Edit</button>';
+    // remove error message
+    cells[2].querySelector('.td-sub')?.remove();
+  }
+  closeEdit('row-' + row);
+  decrementErrors();
+}
+
+// Fix: row 7 (transit)
+function checkTransitFix(input) {
+  const btn = document.getElementById('save-7-btn');
+  const isValid = /^\d{5}$/.test(input.value.trim());
+  btn.disabled = !isValid;
+  if (isValid) { input.classList.remove('err'); input.nextElementSibling?.remove(); }
+}
+function saveEditTransit() {
+  const rowEl = document.getElementById('row-7');
+  if (rowEl) {
+    rowEl.className = '';
+    rowEl.setAttribute('data-state','valid');
+    rowEl.cells[7].innerHTML = '<span class="badge badge-teal">✓ Valid</span>';
+    rowEl.cells[8].innerHTML = '<button class="tbl-action-btn">Edit</button>';
+    rowEl.cells[2].querySelector('.td-sub')?.remove();
+  }
+  closeEdit('row-7');
+  decrementErrors();
+}
+
+// Resolve method (row 9)
+let selectedMethod = 'wire';
+function selectMethod(m) {
+  selectedMethod = m;
+  ['wire','eft'].forEach(id => {
+    document.getElementById('method-' + id)?.classList.remove('selected');
+    document.getElementById('mr-' + id)?.classList.remove('on');
+  });
+  document.getElementById('method-' + m)?.classList.add('selected');
+  document.getElementById('mr-' + m)?.classList.add('on');
+}
+function resolveMethod() {
+  const rowEl = document.getElementById('row-9');
+  if (rowEl) {
+    rowEl.className = '';
+    rowEl.setAttribute('data-state','valid');
+    const methodText = selectedMethod === 'wire' ? 'Wire' : 'EFT';
+    const badge = selectedMethod === 'wire' ? 'badge-wire' : 'badge-eft';
+    rowEl.cells[5].innerHTML = `<span class="badge ${badge}">${methodText}</span>`;
+    rowEl.cells[7].innerHTML = '<span class="badge badge-teal">✓ Valid</span>';
+    rowEl.cells[8].innerHTML = '<button class="tbl-action-btn">Edit</button>';
+    rowEl.cells[2].querySelector('.td-sub')?.remove();
+  }
+  closeEdit('row-9');
+  decrementErrors();
+}
+
+function removeRow(rowId) {
+  const row = document.getElementById(rowId);
+  const editRow = document.getElementById('edit-' + rowId);
+  if (row && row.getAttribute('data-state') !== 'valid') {
+    row.style.transition = 'opacity .2s';
+    row.style.opacity = '0';
+    if (editRow) { editRow.style.opacity = '0'; editRow.style.transition = 'opacity .2s'; }
+    setTimeout(() => {
+      row.remove();
+      editRow?.remove();
+      decrementErrors();
+    }, 200);
+  } else if (row) {
+    row.style.transition = 'opacity .2s';
+    row.style.opacity = '0';
+    setTimeout(() => row.remove(), 200);
+  }
+}
+
+function decrementErrors() {
+  errCount = Math.max(0, errCount - 1);
+  const countEl = document.getElementById('error-count');
+  const subEl = document.getElementById('error-sub');
+  const badgeEl = document.getElementById('filter-badge');
+  const filterBtn = document.getElementById('filter-errors-btn');
+  const confirmBtn = document.getElementById('confirm-all-btn');
+  const banner = document.getElementById('review-error-banner');
+  if (countEl) {
+    countEl.textContent = errCount;
+    if (errCount === 0) {
+      countEl.className = 'sum-val ok';
+      countEl.textContent = '0';
+      if (subEl) subEl.textContent = 'all valid';
+      if (filterBtn) filterBtn.classList.remove('active');
+      if (banner) banner.style.display = 'none';
+      if (confirmBtn) {
+        confirmBtn.disabled = false;
+        confirmBtn.style.opacity = '1';
+        confirmBtn.style.cursor = 'pointer';
+        confirmBtn.textContent = 'Review & Confirm →';
+      }
+    } else {
+      if (badgeEl) badgeEl.textContent = errCount;
+    }
+  }
+}
+
+function checkConfirm() {
+  if (errCount === 0) goTo('s5-confirm');
+}
+
+// ─── FILTER TOGGLE ─────────────────────────────────
+let showingErrors = false;
+function toggleFilter(mode) {
+  showingErrors = (mode === 'errors');
+  document.querySelectorAll('#review-tbody tr').forEach(row => {
+    if (row.id && row.id.startsWith('edit-')) return;
+    const state = row.getAttribute('data-state');
+    if (!state) return;
+    row.style.display = (showingErrors && state === 'valid') ? 'none' : '';
+  });
+  document.getElementById('filter-errors-btn').classList.toggle('active', showingErrors);
+  document.getElementById('filter-all-btn').classList.toggle('active', !showingErrors);
+}
+
+// ─── CHECKBOX TOGGLE (valid rows only) ─────────────
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('review-tbody')?.addEventListener('click', e => {
+    const cb = e.target.closest('.cb');
+    if (!cb) return;
+    const row = cb.closest('tr');
+    if (row && row.getAttribute('data-state') === 'valid') {
+      cb.classList.toggle('checked');
+    }
+  });
+});
+
+// ─── CONFIRM — ACCOUNT SELECTION ──────────────────
+function selectAccount(type, el) {
+  const cadCard = document.getElementById('acc-cad');
+  const usdCard = document.getElementById('acc-usd');
+  const insufInline = document.getElementById('insuf-inline');
+  const tipBanner = document.getElementById('tip-banner');
+  const sendBtn = document.getElementById('send-btn');
+
+  cadCard.classList.remove('selected');
+  usdCard.classList.remove('usd-card--active');
+
+  if (type === 'usd') {
+    usdCard.classList.add('usd-card--active');
+    insufInline.style.display = 'block';
+    tipBanner.style.display = 'flex';
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = '0.38';
+    sendBtn.style.cursor = 'not-allowed';
+  } else {
+    cadCard.classList.add('selected');
+    insufInline.style.display = 'none';
+    tipBanner.style.display = 'none';
+    sendBtn.disabled = false;
+    sendBtn.style.opacity = '';
+    sendBtn.style.cursor = '';
+    // Reset partial state when switching back to CAD
+    const cb = document.getElementById('partial-cb');
+    if (cb) cb.classList.remove('checked');
+    const split = document.getElementById('partial-split');
+    if (split) split.style.display = 'none';
+    const skippedDetail = document.getElementById('skipped-detail');
+    if (skippedDetail) skippedDetail.style.display = 'none';
+    const toggle = document.getElementById('skipped-toggle');
+    if (toggle) toggle.textContent = 'Show details';
+  }
+}
+
+let sendPartialChecked = false;
+function toggleSendPartial() {
+  sendPartialChecked = !sendPartialChecked;
+  const cb = document.getElementById('partial-cb');
+  const split = document.getElementById('partial-split');
+  const sendBtn = document.getElementById('send-btn');
+  cb.classList.toggle('checked', sendPartialChecked);
+  split.style.display = sendPartialChecked ? 'block' : 'none';
+  if (sendPartialChecked) {
+    sendBtn.disabled = false;
+    sendBtn.style.opacity = '';
+    sendBtn.style.cursor = '';
+  } else {
+    sendBtn.disabled = true;
+    sendBtn.style.opacity = '0.38';
+    sendBtn.style.cursor = 'not-allowed';
+    // Also collapse skipped detail
+    document.getElementById('skipped-detail').style.display = 'none';
+    document.getElementById('skipped-toggle').textContent = 'Show details';
+  }
+}
+
+let skippedDetailOpen = false;
+function toggleSkippedDetail() {
+  skippedDetailOpen = !skippedDetailOpen;
+  document.getElementById('skipped-detail').style.display = skippedDetailOpen ? 'block' : 'none';
+  document.getElementById('skipped-toggle').textContent = skippedDetailOpen ? 'Hide details' : 'Show details';
+}
+
+// ─── TEMPLATE TOGGLE ───────────────────────────────
+let selectedTmpl = 'standard';
+function toggleTemplate() {
+  const std  = document.getElementById('tmpl-standard');
+  const saved = document.getElementById('tmpl-saved');
+  if (selectedTmpl === 'standard') {
+    std.classList.remove('selected');
+    saved.classList.add('selected');
+    selectedTmpl = 'saved';
+  } else {
+    saved.classList.remove('selected');
+    std.classList.add('selected');
+    selectedTmpl = 'standard';
+  }
+}
+
+// ─── INIT ──────────────────────────────────────────
+const _urlPage = new URLSearchParams(window.location.search).get('page');
+goTo(PAGES[_urlPage] ? _urlPage : 's0-entry');
+</script>
+</body>
+</html>
