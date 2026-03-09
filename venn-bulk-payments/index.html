@@ -853,47 +853,6 @@ a { text-decoration: none; color: inherit; }
     </div>
 
 
-    <!-- ══════════════════════════════════════════
-         S3 — VALIDATING
-    ══════════════════════════════════════════ -->
-    <div class="page-wrap" id="page-s3-validating">
-      <div class="page-center" style="max-width:480px;">
-        <div style="text-align:center;padding:20px 0 28px;">
-          <div style="font-size:32px;margin-bottom:14px;">✅</div>
-          <div style="font-size:17px;font-weight:600;color:var(--grey-900);margin-bottom:4px;" id="val-title">November_vendors.csv uploaded</div>
-          <div style="font-size:13px;color:var(--grey-500);margin-bottom:24px;" id="val-sub">47 rows detected — validating now</div>
-          <div class="progress-bar" style="margin:0 auto 10px;max-width:320px;">
-            <div class="progress-fill" id="val-bar" style="width:0%;"></div>
-          </div>
-          <div style="font-size:12px;color:var(--grey-400);" id="val-label">Starting validation…</div>
-        </div>
-
-        <div class="card">
-          <div class="checklist" id="val-checklist">
-            <div class="check-item" id="vck-1">
-              <div class="check-dot done">✓</div>
-              <div class="check-text done">File format valid</div>
-            </div>
-            <div class="check-item" id="vck-2">
-              <div class="check-dot done">✓</div>
-              <div class="check-text done">47 rows parsed successfully</div>
-            </div>
-            <div class="check-item" id="vck-3">
-              <div class="check-dot active"><div class="spinner" style="width:12px;height:12px;border-width:1.5px;"></div></div>
-              <div class="check-text active">Validating account details…</div>
-            </div>
-            <div class="check-item" id="vck-4">
-              <div class="check-dot pending"></div>
-              <div class="check-text" style="color:var(--grey-400);">Checking funding account balance…</div>
-            </div>
-            <div class="check-item" id="vck-5">
-              <div class="check-dot pending"></div>
-              <div class="check-text" style="color:var(--grey-400);">Identifying payment methods…</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
 
     <!-- ══════════════════════════════════════════
@@ -1392,7 +1351,6 @@ a { text-decoration: none; color: inherit; }
   <button class="pn-btn" onclick="goTo('s0-entry')">Entry</button>
   <button class="pn-btn" onclick="goTo('s1-prepare')">Prepare</button>
   <button class="pn-btn" onclick="goTo('s2-upload')">Upload</button>
-  <button class="pn-btn" onclick="goTo('s3-validating')">Validating</button>
   <button class="pn-btn active" onclick="goTo('s4-review')">Review</button>
   <button class="pn-btn" onclick="goTo('s5-confirm')">Confirm</button>
   <button class="pn-btn" onclick="goTo('s6-sending')">Sending</button>
@@ -1408,7 +1366,6 @@ const PAGES = {
   's0-entry':     'page-s0-entry',
   's1-prepare':   'page-s1-prepare',
   's2-upload':    'page-s2-upload',
-  's3-validating':'page-s3-validating',
   's4-review':    'page-s4-review',
   's5-confirm':   'page-s5-confirm',
   's6-sending':   'page-s6-sending',
@@ -1421,7 +1378,6 @@ const TITLES = {
   's0-entry':     'Send Money',
   's1-prepare':   'Prepare File',
   's2-upload':    'Upload CSV',
-  's3-validating':'Validating…',
   's4-review':    'Review Payments',
   's5-confirm':   'Confirm & Send',
   's6-sending':   'Sending…',
@@ -1446,7 +1402,6 @@ function goTo(id) {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
   // trigger page-specific animations
-  if (id === 's3-validating') startValidation();
   if (id === 's4-review')     startReview();
   if (id === 's6-sending')    startSending();
   if (id === 's5-confirm')    startFXTimer();
@@ -1481,7 +1436,7 @@ function animateUpload() {
   const label = document.getElementById('upload-pct');
   const interval = setInterval(() => {
     pct += Math.random() * 18 + 4;
-    if (pct >= 100) { pct = 100; clearInterval(interval); setTimeout(() => goTo('s3-validating'), 400); }
+    if (pct >= 100) { pct = 100; clearInterval(interval); setTimeout(() => goTo('s4-review'), 400); }
     bar.style.width = pct + '%';
     label.textContent = Math.round(pct) + '%';
   }, 140);
