@@ -507,7 +507,7 @@ a { text-decoration: none; color: inherit; }
 
 /* ─── PROTOTYPE NAV ───────────────────────────── */
 .proto-nav {
-  position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+  position: fixed; bottom: 20px; left: calc(50% + var(--sidebar-w) / 2); transform: translateX(-50%);
   background: var(--grey-900); border-radius: 100px; padding: 6px 8px;
   display: flex; gap: 2px; z-index: 200; box-shadow: 0 8px 24px rgba(0,0,0,0.3);
 }
@@ -897,245 +897,71 @@ a { text-decoration: none; color: inherit; }
 
 
     <!-- ══════════════════════════════════════════
-         S4 — REVIEW TABLE (with errors)
+         S4 — REVIEW (validation state)
     ══════════════════════════════════════════ -->
-    <div class="page-wrap" id="page-s4-review">
-      <div class="page-center entry-page-center flex-col" style="max-width:1180px;">
+    <div class="page-wrap" id="page-s4-review" style="padding: 40px 200px;">
+      <div style="display:flex;flex-direction:column;gap:40px;">
 
-        <div class="back-link" onclick="goTo('s0-entry')">← Back to Transfers</div>
+        <!-- Main card -->
+        <div style="border:1px solid #d9d9d9;border-radius:20px;padding:40px;display:flex;flex-direction:column;gap:24px;align-items:center;background:#fff;">
 
-        <div class="entry-card">
-
-          <!-- Step progress bar: 4 of 5 filled -->
-          <div class="entry-progress-bar">
-            <div class="entry-step filled"></div>
-            <div class="entry-step filled"></div>
-            <div class="entry-step filled"></div>
-            <div class="entry-step filled"></div>
-            <div class="entry-step"></div>
+          <!-- Heading -->
+          <div style="display:flex;flex-direction:column;gap:12px;align-items:center;text-align:center;width:100%;">
+            <div style="font-size:32px;line-height:48px;">✅</div>
+            <div style="font-size:20px;font-weight:600;color:#0d0d0d;line-height:26px;">payments_export.csv uploaded</div>
+            <div style="font-size:14px;color:#0d0d0d;line-height:21px;">47 rows detected - validating now</div>
           </div>
 
-          <h1 class="entry-title">Review</h1>
-          <p class="upload-subtitle">47 rows detected - validating now</p>
-
-          <!-- Error banner -->
-          <div class="upload-err-banner" id="review-error-banner">
-            <div class="banner-icon">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0zM12 9v4M12 17h.01" stroke="var(--error)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div class="banner-body"><strong>3 payments need attention</strong> before you can confirm. Fix or remove them to proceed, or <a onclick="goTo('s5-confirm')"><strong>send the 9 clean rows now.</strong></a></div>
+          <!-- Progress bar -->
+          <div style="width:326px;position:relative;height:4px;border-radius:9999px;background:#f8f8f8;overflow:hidden;">
+            <div id="rv-bar" style="position:absolute;top:0;left:0;height:4px;width:25%;border-radius:9999px;background:#3dbf72;transition:width 0.6s ease;"></div>
           </div>
 
-          <!-- Summary bar -->
-          <div class="summary-bar">
-            <div class="sum-cell">
-              <div class="sum-label">Payments</div>
-              <div class="sum-val">12</div>
-              <div class="sum-sub">recipients</div>
-            </div>
-            <div class="sum-cell">
-              <div class="sum-label">Total</div>
-              <div class="sum-val">$32,450</div>
-              <div class="sum-sub">CAD + USD equiv.</div>
-            </div>
-            <div class="sum-cell">
-              <div class="sum-label">Currencies</div>
-              <div class="sum-val" style="font-size:13px;display:flex;gap:5px;flex-wrap:wrap;margin-top:4px;">
-                <span class="badge badge-usd">🇺🇸 USD</span>
-                <span class="badge badge-cad">🇨🇦 CAD</span>
+          <!-- Status text -->
+          <div id="rv-status" style="font-size:14px;color:#6b6b6b;line-height:21px;text-align:center;">Validating account details...</div>
+
+          <!-- Checklist card -->
+          <div style="border:1px solid #d9d9d9;border-radius:10px;padding:25px;width:100%;display:flex;flex-direction:column;gap:10px;">
+
+            <!-- Item 1: done (static) -->
+            <div style="display:flex;align-items:center;gap:10px;height:19.5px;">
+              <div style="width:18px;height:18px;border-radius:9px;background:#e6f8f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:10px;color:#00b896;line-height:1;">✓</span>
               </div>
+              <span style="font-size:14px;color:#717171;line-height:21px;">File format valid</span>
             </div>
-            <div class="sum-cell">
-              <div class="sum-label">Errors</div>
-              <div class="sum-val err" id="error-count">3</div>
-              <div class="sum-sub" id="error-sub">need attention</div>
-            </div>
-          </div>
 
-          <!-- Toolbar + table -->
-          <div class="table-wrap">
-            <div class="table-toolbar">
-              <div class="search-wrap">
-                <div class="search-icon"><img src="Assets/Icons/search-md.svg" alt=""></div>
-                <input class="search-input" placeholder="Search recipient…" />
+            <!-- Item 2: done (static) -->
+            <div style="display:flex;align-items:center;gap:10px;height:19.5px;">
+              <div style="width:18px;height:18px;border-radius:9px;background:#e6f8f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <span style="font-size:10px;color:#00b896;line-height:1;">✓</span>
               </div>
-              <button class="filter-btn filter-btn--error" id="filter-errors-btn" onclick="toggleFilter('errors')">
-                ⚠ Errors only <span class="count-badge" id="filter-badge">3</span>
-              </button>
-              <button class="filter-btn active" id="filter-all-btn" onclick="toggleFilter('all')">All (12)</button>
-              <div style="margin-left:auto;">
-                <button class="btn btn-secondary btn-sm">↓ Export</button>
+              <span style="font-size:14px;color:#717171;line-height:21px;">47 rows parsed successfully</span>
+            </div>
+
+            <!-- Item 3: animated -->
+            <div style="display:flex;align-items:center;gap:10px;height:19.5px;">
+              <div id="rv-icon-3" style="width:18px;height:18px;border-radius:9px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                <div style="width:12px;height:12px;border-radius:50%;border:1.5px solid #e0e0e0;border-top-color:#6b6b6b;animation:spin .8s linear infinite;"></div>
               </div>
+              <span id="rv-text-3" style="font-size:14px;font-weight:500;color:#1a1a1a;line-height:21px;">Validating account details…</span>
             </div>
 
-            <table class="tbl" id="review-table">
-              <thead>
-                <tr>
-                  <th style="width:36px;"><div class="cb checked"></div></th>
-                  <th style="width:36px;">#</th>
-                  <th>Recipient</th>
-                  <th>Amount</th>
-                  <th>Currency</th>
-                  <th>Method</th>
-                  <th>Reference</th>
-                  <th>Status</th>
-                  <th style="width:140px;"></th>
-                </tr>
-              </thead>
-              <tbody id="review-tbody">
-
-                <!-- Error row 1: missing account number -->
-                <tr class="row-err" id="row-2" data-state="error">
-                  <td><div class="cb"></div></td>
-                  <td style="color:var(--grey-400);font-size:11px;">02</td>
-                  <td>
-                    <div style="font-weight:500;">Jane Smith</div>
-                    <div class="td-sub">⚠ Missing account number</div>
-                  </td>
-                  <td class="td-mono">$850.00</td>
-                  <td><span class="badge badge-usd">🇺🇸 USD</span></td>
-                  <td><span class="badge badge-wire">Wire</span></td>
-                  <td style="color:var(--grey-500);font-size:12px;">Oct invoice</td>
-                  <td><span class="badge badge-err">⚠ Error</span></td>
-                  <td>
-                    <div style="display:flex;gap:5px;">
-                      <button class="tbl-action-btn" onclick="openEdit('row-2')">Edit</button>
-                      <button class="tbl-action-btn danger" onclick="removeRow('row-2')">Remove</button>
-                    </div>
-                  </td>
-                </tr>
-                <!-- inline edit for row-2 -->
-                <tr class="hidden" id="edit-row-2">
-                  <td colspan="9">
-                    <div class="inline-edit-wrap fade-in">
-                      <div class="inline-edit-hdr">
-                        Editing: Jane Smith
-                        <span class="badge badge-err">Row 2</span>
-                      </div>
-                      <div class="inline-edit-grid">
-                        <div class="field"><div class="label">Recipient Name</div><input class="input" value="Jane Smith" /></div>
-                        <div class="field"><div class="label">Account Number <span class="req">*</span></div><input class="input err" placeholder="e.g. 1234567" id="edit-account-2" oninput="checkEditFix('2')" /><div class="input-err-msg">⚠ Required — enter the recipient's bank account number</div></div>
-                        <div class="field"><div class="label">Transit / Routing Number</div><input class="input" value="021000021" /></div>
-                        <div class="field"><div class="label">Amount</div><input class="input" value="850.00" /></div>
-                        <div class="field"><div class="label">Currency</div><select class="input"><option selected>USD</option><option>CAD</option><option>EUR</option></select></div>
-                        <div class="field"><div class="label">Reference</div><input class="input" value="Oct invoice" /></div>
-                      </div>
-                      <div class="inline-edit-actions">
-                        <button class="btn btn-primary btn-sm" id="save-2-btn" onclick="saveEdit('2')" disabled>Save &amp; Validate</button>
-                        <button class="btn btn-ghost btn-sm" onclick="closeEdit('row-2')">Cancel</button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Valid row -->
-                <tr data-state="valid">
-                  <td><div class="cb checked"></div></td>
-                  <td style="color:var(--grey-400);font-size:11px;">03</td>
-                  <td style="font-weight:500;">Acme Corp</td>
-                  <td class="td-mono">$1,200.00</td>
-                  <td><span class="badge badge-cad">🇨🇦 CAD</span></td>
-                  <td><span class="badge badge-eft">EFT</span></td>
-                  <td style="color:var(--grey-500);font-size:12px;">Q3 services</td>
-                  <td><span class="badge badge-teal">✓ Valid</span></td>
-                  <td><button class="tbl-action-btn" onclick="openEdit('row-3')">Edit</button></td>
-                </tr>
-                <tr class="hidden" id="edit-row-3"><td colspan="9"><div class="inline-edit-wrap fade-in"><div class="inline-edit-hdr">Editing: Acme Corp</div><div class="inline-edit-grid"><div class="field"><div class="label">Recipient Name</div><input class="input" value="Acme Corp" /></div><div class="field"><div class="label">Account Number</div><input class="input" value="003-00123456" /></div><div class="field"><div class="label">Transit Number</div><input class="input" value="00300" /></div><div class="field"><div class="label">Amount</div><input class="input" value="1200.00" /></div><div class="field"><div class="label">Currency</div><select class="input"><option selected>CAD</option><option>USD</option></select></div><div class="field"><div class="label">Reference</div><input class="input" value="Q3 services" /></div></div><div class="inline-edit-actions"><button class="btn btn-primary btn-sm" onclick="closeEdit('row-3')">Save &amp; Validate</button><button class="btn btn-ghost btn-sm" onclick="closeEdit('row-3')">Cancel</button></div></div></td></tr>
-
-                <!-- Error row 2: invalid transit -->
-                <tr class="row-err" id="row-7" data-state="error">
-                  <td><div class="cb"></div></td>
-                  <td style="color:var(--grey-400);font-size:11px;">03</td>
-                  <td>
-                    <div style="font-weight:500;">Green Peak Ltd.</div>
-                    <div class="td-sub">⚠ Transit number must be 5 digits (got "003")</div>
-                  </td>
-                  <td class="td-mono">$500.00</td>
-                  <td><span class="badge badge-cad">🇨🇦 CAD</span></td>
-                  <td><span class="badge badge-eft">EFT</span></td>
-                  <td style="color:var(--grey-500);font-size:12px;">Nov retainer</td>
-                  <td><span class="badge badge-err">⚠ Error</span></td>
-                  <td>
-                    <div style="display:flex;gap:5px;">
-                      <button class="tbl-action-btn" onclick="openEdit('row-7')">Edit</button>
-                      <button class="tbl-action-btn danger" onclick="removeRow('row-7')">Remove</button>
-                    </div>
-                  </td>
-                </tr>
-                <tr class="hidden" id="edit-row-7"><td colspan="9"><div class="inline-edit-wrap fade-in"><div class="inline-edit-hdr">Editing: Green Peak Ltd. <span class="badge badge-err">Transit number error</span></div><div class="inline-edit-grid"><div class="field"><div class="label">Recipient Name</div><input class="input" value="Green Peak Ltd." /></div><div class="field"><div class="label">Account Number</div><input class="input" value="8876543" /></div><div class="field"><div class="label">Transit Number <span class="req">*</span></div><input class="input err" value="003" oninput="checkTransitFix(this)" id="transit-7" /><div class="input-err-msg">⚠ Must be exactly 5 digits — e.g. 00300</div></div><div class="field"><div class="label">Amount</div><input class="input" value="500.00" /></div><div class="field"><div class="label">Currency</div><select class="input"><option selected>CAD</option><option>USD</option></select></div><div class="field"><div class="label">Reference</div><input class="input" value="Nov retainer" /></div></div><div class="inline-edit-actions"><button class="btn btn-primary btn-sm" id="save-7-btn" onclick="saveEditTransit()" disabled>Save &amp; Validate</button><button class="btn btn-ghost btn-sm" onclick="closeEdit('row-7')">Cancel</button></div></div></td></tr>
-
-                <!-- Warning row: multi-method -->
-                <tr class="row-warn" id="row-9" data-state="warning">
-                  <td><div class="cb"></div></td>
-                  <td style="color:var(--grey-400);font-size:11px;">04</td>
-                  <td>
-                    <div style="font-weight:500;">Torres &amp; Associates</div>
-                    <div class="td-sub warn">Recipient has 2 payment methods - select one</div>
-                  </td>
-                  <td class="td-mono">$1,200.00</td>
-                  <td><span class="badge badge-usd">🇺🇸 USD</span></td>
-                  <td><span class="badge badge-grey">Unset</span></td>
-                  <td style="color:var(--grey-500);font-size:12px;"></td>
-                  <td><span class="badge badge-warn">⚠ Choose</span></td>
-                  <td><button class="tbl-action-btn" onclick="openEdit('row-9')">Select</button></td>
-                </tr>
-                <tr class="hidden" id="edit-row-9">
-                  <td colspan="9">
-                    <div class="inline-edit-wrap fade-in">
-                      <div class="inline-edit-hdr">Torres &amp; Associates — Select payment method</div>
-                      <div style="font-size:13px;color:var(--grey-500);margin-bottom:14px;">This recipient has multiple payment methods. Choose how to send <strong>$1,200.00 USD</strong>.</div>
-                      <div class="method-opts" style="max-width:520px;margin-bottom:14px;">
-                        <div class="method-opt selected" id="method-wire" onclick="selectMethod('wire')">
-                          <div class="rec-radio on" id="mr-wire"></div>
-                          <div>
-                            <div class="m-label">Wire Transfer (USD)</div>
-                            <div class="m-detail">Account ****4821 · JP Morgan Chase · Routing 021000021</div>
-                          </div>
-                        </div>
-                        <div class="method-opt" id="method-eft" onclick="selectMethod('eft')">
-                          <div class="rec-radio" id="mr-eft"></div>
-                          <div>
-                            <div class="m-label">EFT (CAD)</div>
-                            <div class="m-detail">Account ****7203 · TD Bank · Transit 03456</div>
-                            <div class="m-note">⚡ Note: currency will change to CAD — FX conversion applies</div>
-                          </div>
-                        </div>
-                      </div>
-                      <div class="inline-edit-actions">
-                        <button class="btn btn-primary btn-sm" onclick="resolveMethod()">Confirm Method</button>
-                        <button class="btn btn-ghost btn-sm" onclick="closeEdit('row-9')">Skip for now</button>
-                      </div>
-                    </div>
-                  </td>
-                </tr>
-
-                <!-- Valid rows -->
-                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">05</td><td style="font-weight:500;">Bright Collective</td><td class="td-mono">$2,400.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;">Design work</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
-                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">06</td><td style="font-weight:500;">NorthStar Inc.</td><td class="td-mono">$500.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;"></td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
-                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">07</td><td style="font-weight:500;">Rideau Logistics</td><td class="td-mono">$3,200.00</td><td><span class="badge badge-usd">🇺🇸 USD</span></td><td><span class="badge badge-wire">Wire</span></td><td style="color:var(--grey-500);font-size:12px;">Freight Nov</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
-                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">08</td><td style="font-weight:500;">Bluewater Media</td><td class="td-mono">$1,750.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;">Campaign</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
-                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">08</td><td style="font-weight:500;">Summit Advisory</td><td class="td-mono">$6,000.00</td><td><span class="badge badge-cad">🇨🇦 CAD</span></td><td><span class="badge badge-eft">EFT</span></td><td style="color:var(--grey-500);font-size:12px;">Q4 retainer</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
-                <tr data-state="valid"><td><div class="cb checked"></div></td><td style="color:var(--grey-400);font-size:11px;">09</td><td style="font-weight:500;">Pacific Imports</td><td class="td-mono">$2,100.00</td><td><span class="badge badge-usd">🇺🇸 USD</span></td><td><span class="badge badge-wire">Wire</span></td><td style="color:var(--grey-500);font-size:12px;">Invoice #882</td><td><span class="badge badge-teal">✓ Valid</span></td><td><button class="tbl-action-btn">Edit</button></td></tr>
-
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Bottom buttons -->
-          <div class="page-buttons">
-            <button class="btn-back" onclick="goTo('s2-upload')">Back</button>
-            <div style="display:flex;gap:8px;align-items:center;">
-              <button class="btn-back" onclick="goTo('s5-confirm')" id="send-clean-btn">Send 9 clean rows</button>
-              <button class="btn-upload" id="confirm-all-btn" onclick="checkConfirm()" disabled style="opacity:0.4;cursor:not-allowed;">
-                Review &amp; Confirm
-                <img src="Assets/Icons/arrow-right.svg" alt="" class="btn-upload-icon">
-              </button>
+            <!-- Item 4: animated -->
+            <div style="display:flex;align-items:center;gap:10px;height:19.5px;">
+              <div id="rv-icon-4" style="width:18px;height:18px;border-radius:9px;border:1.5px solid #e0e0e0;flex-shrink:0;"></div>
+              <span id="rv-text-4" style="font-size:14px;color:#9e9e9e;line-height:21px;">Checking funding account balance…</span>
             </div>
+
+            <!-- Item 5: animated -->
+            <div style="display:flex;align-items:center;gap:10px;height:19.5px;">
+              <div id="rv-icon-5" style="width:18px;height:18px;border-radius:9px;border:1.5px solid #e0e0e0;flex-shrink:0;"></div>
+              <span id="rv-text-5" style="font-size:14px;color:#9e9e9e;line-height:21px;">Identifying payment methods…</span>
+            </div>
+
           </div>
 
-        </div><!-- /entry-card -->
+        </div>
 
       </div>
     </div>
@@ -1621,6 +1447,7 @@ function goTo(id) {
 
   // trigger page-specific animations
   if (id === 's3-validating') startValidation();
+  if (id === 's4-review')     startReview();
   if (id === 's6-sending')    startSending();
   if (id === 's5-confirm')    startFXTimer();
 }
@@ -1690,6 +1517,70 @@ function startValidation() {
       }
     }, s.delay);
   });
+}
+
+// ─── REVIEW ANIMATION ──────────────────────────────
+function startReview() {
+  const bar = document.getElementById('rv-bar');
+  const status = document.getElementById('rv-status');
+  if (!bar) return;
+
+  // Reset to initial Figma state (step 3 active, 25% progress)
+  bar.style.transition = 'none';
+  bar.style.width = '25%';
+  rvSetIcon(3, 'spin'); rvSetText(3, 'active');
+  rvSetIcon(4, 'pending'); rvSetText(4, 'pending');
+  rvSetIcon(5, 'pending'); rvSetText(5, 'pending');
+  status.textContent = 'Validating account details...';
+
+  // Step 3 → 4
+  setTimeout(() => {
+    bar.style.transition = 'width 0.6s ease';
+    bar.style.width = '55%';
+    rvSetIcon(3, 'done'); rvSetText(3, 'done');
+    rvSetIcon(4, 'spin'); rvSetText(4, 'active');
+    status.textContent = 'Checking funding account balance...';
+  }, 1200);
+
+  // Step 4 → 5
+  setTimeout(() => {
+    bar.style.width = '80%';
+    rvSetIcon(4, 'done'); rvSetText(4, 'done');
+    rvSetIcon(5, 'spin'); rvSetText(5, 'active');
+    status.textContent = 'Identifying payment methods...';
+  }, 2500);
+
+  // Step 5 → complete
+  setTimeout(() => {
+    bar.style.width = '100%';
+    rvSetIcon(5, 'done'); rvSetText(5, 'done');
+    status.textContent = 'Validation complete';
+  }, 3700);
+
+  // Advance to next screen
+  setTimeout(() => goTo('s5-confirm'), 4400);
+}
+
+function rvSetIcon(n, state) {
+  const el = document.getElementById('rv-icon-' + n);
+  if (!el) return;
+  if (state === 'done') {
+    el.style.cssText = 'width:18px;height:18px;border-radius:9px;background:#e6f8f4;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+    el.innerHTML = '<span style="font-size:10px;color:#00b896;line-height:1;">✓</span>';
+  } else if (state === 'spin') {
+    el.style.cssText = 'width:18px;height:18px;border-radius:9px;background:#f5f5f5;display:flex;align-items:center;justify-content:center;flex-shrink:0;';
+    el.innerHTML = '<div style="width:12px;height:12px;border-radius:50%;border:1.5px solid #e0e0e0;border-top-color:#6b6b6b;animation:spin .8s linear infinite;"></div>';
+  } else {
+    el.style.cssText = 'width:18px;height:18px;border-radius:9px;border:1.5px solid #e0e0e0;flex-shrink:0;';
+    el.innerHTML = '';
+  }
+}
+
+function rvSetText(n, state) {
+  const el = document.getElementById('rv-text-' + n);
+  if (!el) return;
+  el.style.fontWeight = state === 'active' ? '500' : '400';
+  el.style.color = state === 'active' ? '#1a1a1a' : state === 'done' ? '#717171' : '#9e9e9e';
 }
 
 // ─── SENDING ANIMATION ─────────────────────────────
