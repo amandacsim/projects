@@ -1,0 +1,1857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venn — Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  /* ─────────────────────────────────────────────
+     TOKENS
+  ───────────────────────────────────────────── */
+  :root {
+    /* Colors */
+    --color-black:         #0D0D0D;
+    --color-gray-900:      #1A1A1A;
+    --color-gray-700:      #3D3D3D;
+    --color-gray-500:      #6B6B6B;
+    --color-gray-300:      #B3B3B3;
+    --color-gray-200:      #D9D9D9;
+    --color-gray-100:      #F0F0F0;
+    --color-gray-50:       #F8F8F8;
+    --color-white:         #FFFFFF;
+
+    --color-green-700:     #1A6B42;
+    --color-green-500:     #2A9D5C;   /* primary brand */
+    --color-green-400:     #3DBF72;
+    --color-green-100:     #D6F2E3;
+    --color-green-50:      #EEF9F4;
+
+    --color-blue-link:     #1A5CCC;
+    --color-red-error:     #D93025;
+    --color-amber-warn:    #E07B00;
+
+    /* Typography */
+    --font-sans: 'DM Sans', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+
+    --text-xs:   11px;
+    --text-sm:   12px;
+    --text-base: 14px;
+    --text-md:   16px;
+    --text-lg:   20px;
+    --text-xl:   24px;
+    --text-2xl:  30px;
+
+    --weight-regular: 400;
+    --weight-medium:  500;
+    --weight-semi:    600;
+
+    --leading-tight:  1.2;
+    --leading-normal: 1.5;
+    --leading-loose:  1.7;
+
+    /* Spacing */
+    --space-1:  4px;
+    --space-2:  8px;
+    --space-3:  12px;
+    --space-4:  16px;
+    --space-5:  20px;
+    --space-6:  24px;
+    --space-8:  32px;
+    --space-10: 40px;
+    --space-12: 48px;
+    --space-16: 64px;
+
+    /* Radii */
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   14px;
+    --radius-xl:   20px;
+    --radius-full: 9999px;
+
+    /* Shadows */
+    --shadow-sm:  0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md:  0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+    --shadow-lg:  0 8px 24px rgba(0,0,0,0.10), 0 4px 8px rgba(0,0,0,0.06);
+
+    /* Transitions */
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --duration-fast:   120ms;
+    --duration-normal: 200ms;
+
+    /* Page */
+    --page-bg: #F5F5F3;
+  }
+
+  /* ─────────────────────────────────────────────
+     RESET / BASE
+  ───────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-black);
+    background: var(--page-bg);
+    line-height: var(--leading-normal);
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--color-blue-link); text-decoration: none; }
+
+  /* ─────────────────────────────────────────────
+     LAYOUT HELPERS
+  ───────────────────────────────────────────── */
+  .ds-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: var(--space-12) var(--space-8);
+  }
+  .ds-section {
+    margin-bottom: var(--space-16);
+  }
+  .ds-section-title {
+    font-size: var(--text-xs);
+    font-weight: var(--weight-semi);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-gray-400);
+    margin-bottom: var(--space-6);
+    padding-bottom: var(--space-3);
+    border-bottom: 1px solid var(--color-gray-200);
+  }
+  .ds-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-4);
+    align-items: flex-start;
+  }
+  .ds-col { display: flex; flex-direction: column; gap: var(--space-3); }
+  .ds-label {
+    font-size: var(--text-xs);
+    color: var(--color-gray-500);
+    font-family: var(--font-mono);
+  }
+  .ds-card {
+    background: var(--color-white);
+    border-radius: var(--radius-lg);
+    padding: var(--space-6);
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.05);
+  }
+
+  /* ─────────────────────────────────────────────
+     COVER
+  ───────────────────────────────────────────── */
+  .ds-cover {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    margin-bottom: var(--space-16);
+    padding-bottom: var(--space-10);
+    border-bottom: 2px solid var(--color-black);
+  }
+  .ds-cover-logo {
+    font-family: var(--font-sans);
+    font-size: 22px;
+    font-weight: var(--weight-semi);
+    letter-spacing: -0.03em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .ds-cover-logo svg { width: 28px; height: 28px; }
+  .ds-cover-meta {
+    margin-left: auto;
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    text-align: right;
+    line-height: var(--leading-loose);
+  }
+
+  /* ─────────────────────────────────────────────
+     COLOR SWATCHES
+  ───────────────────────────────────────────── */
+  .swatch-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: var(--space-3);
+  }
+  .swatch {
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+  .swatch-color { height: 64px; }
+  .swatch-info {
+    background: var(--color-white);
+    padding: 8px 10px;
+  }
+  .swatch-name {
+    font-size: 11px;
+    font-weight: var(--weight-medium);
+    color: var(--color-gray-700);
+    display: block;
+  }
+  .swatch-hex {
+    font-size: 10px;
+    color: var(--color-gray-400);
+    font-family: var(--font-mono);
+  }
+
+  /* ─────────────────────────────────────────────
+     TYPOGRAPHY SPECIMENS
+  ───────────────────────────────────────────── */
+  .type-specimen { display: flex; flex-direction: column; gap: var(--space-2); }
+  .type-row {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-6);
+    padding: var(--space-3) 0;
+    border-bottom: 1px solid var(--color-gray-100);
+  }
+  .type-meta {
+    width: 180px;
+    flex-shrink: 0;
+    font-size: 11px;
+    font-family: var(--font-mono);
+    color: var(--color-gray-400);
+    line-height: 1.6;
+  }
+
+  /* ─────────────────────────────────────────────
+     ICON GRID
+  ───────────────────────────────────────────── */
+  .icon-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+    gap: var(--space-3);
+  }
+  .icon-item {
+    background: var(--color-white);
+    border: 1px solid var(--color-gray-100);
+    border-radius: var(--radius-md);
+    padding: var(--space-4) var(--space-3);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    transition: box-shadow var(--duration-fast);
+  }
+  .icon-item:hover { box-shadow: var(--shadow-md); }
+  .icon-item svg { width: 20px; height: 20px; color: var(--color-gray-700); }
+  .icon-name { font-size: 10px; font-family: var(--font-mono); color: var(--color-gray-500); }
+
+  /* ─────────────────────────────────────────────
+     BUTTON COMPONENT
+  ───────────────────────────────────────────── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    line-height: 1;
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    border: 1.5px solid transparent;
+    cursor: pointer;
+    transition: background var(--duration-fast) var(--ease-out),
+                color var(--duration-fast) var(--ease-out),
+                box-shadow var(--duration-fast) var(--ease-out),
+                transform var(--duration-fast) var(--ease-out),
+                opacity var(--duration-fast);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+  /* Primary */
+  .btn-primary {
+    background: var(--color-black);
+    color: var(--color-white);
+  }
+  .btn-primary:hover { background: var(--color-gray-900); box-shadow: var(--shadow-md); }
+  .btn-primary:active { transform: translateY(1px); box-shadow: none; }
+  /* Secondary */
+  .btn-secondary {
+    background: var(--color-white);
+    color: var(--color-gray-700);
+    border-color: var(--color-gray-200);
+  }
+  .btn-secondary:hover { border-color: var(--color-gray-400); background: var(--color-gray-50); }
+  /* Ghost */
+  .btn-ghost {
+    background: transparent;
+    color: var(--color-gray-700);
+    border-color: transparent;
+  }
+  .btn-ghost:hover { background: var(--color-gray-100); }
+  /* Danger */
+  .btn-danger {
+    background: var(--color-red-error);
+    color: var(--color-white);
+  }
+  .btn-danger:hover { background: #b5271e; }
+  /* Disabled */
+  .btn-disabled, .btn:disabled {
+    opacity: 0.38;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+  /* Sizes */
+  .btn-sm { font-size: var(--text-sm); padding: 8px 14px; border-radius: var(--radius-sm); }
+  .btn-lg { font-size: var(--text-md); padding: 15px 28px; border-radius: var(--radius-lg); }
+  /* Icon only */
+  .btn-icon { padding: 10px; border-radius: var(--radius-md); }
+  /* Loading */
+  .btn-loading { position: relative; color: transparent !important; }
+  .btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(255,255,255,0.4);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ─────────────────────────────────────────────
+     INPUT COMPONENT
+  ───────────────────────────────────────────── */
+  .input-group { display: flex; flex-direction: column; gap: 6px; width: 260px; }
+  .input-label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--color-gray-700);
+  }
+  .input-label .req { color: var(--color-red-error); margin-left: 2px; }
+  .input-wrap { position: relative; }
+  .input-field {
+    width: 100%;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    color: var(--color-black);
+    background: var(--color-white);
+    border: 1.5px solid var(--color-gray-200);
+    border-radius: var(--radius-md);
+    padding: 10px 14px;
+    outline: none;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+  }
+  .input-field::placeholder { color: var(--color-gray-300); }
+  .input-field:hover { border-color: var(--color-gray-400); }
+  .input-field:focus {
+    border-color: var(--color-black);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.07);
+  }
+  .input-field.error {
+    border-color: var(--color-red-error);
+    box-shadow: 0 0 0 3px rgba(217,48,37,0.10);
+  }
+  .input-field.success {
+    border-color: var(--color-green-500);
+    box-shadow: 0 0 0 3px rgba(42,157,92,0.10);
+  }
+  .input-field:disabled {
+    background: var(--color-gray-50);
+    color: var(--color-gray-400);
+    cursor: not-allowed;
+  }
+  .input-hint { font-size: var(--text-xs); color: var(--color-gray-500); }
+  .input-hint.error { color: var(--color-red-error); }
+  .input-hint.success { color: var(--color-green-700); }
+  .input-icon-right {
+    position: absolute;
+    right: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--color-gray-400);
+    pointer-events: none;
+  }
+  .input-prefix {
+    position: absolute;
+    left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--color-gray-500);
+    font-size: var(--text-base);
+  }
+  .input-field.has-prefix { padding-left: 28px; }
+
+  /* Search input */
+  .input-search-wrap { position: relative; }
+  .input-search-wrap .search-icon {
+    position: absolute;
+    left: 12px; top: 50%; transform: translateY(-50%);
+    color: var(--color-gray-400);
+    pointer-events: none;
+  }
+  .input-field.search { padding-left: 36px; }
+
+  /* ─────────────────────────────────────────────
+     UPLOAD CARD COMPONENT
+  ───────────────────────────────────────────── */
+  .upload-card {
+    border: 1.5px dashed var(--color-gray-300);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+    padding: var(--space-8) var(--space-6);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+    text-align: center;
+    cursor: pointer;
+    transition: border-color var(--duration-normal), background var(--duration-normal);
+    width: 320px;
+  }
+  .upload-card:hover {
+    border-color: var(--color-gray-500);
+    background: var(--color-gray-50);
+  }
+  .upload-card.drag-over {
+    border-color: var(--color-green-500);
+    background: var(--color-green-50);
+  }
+  .upload-card.uploaded {
+    border-style: solid;
+    border-color: var(--color-green-500);
+    background: var(--color-green-50);
+  }
+  .upload-card.error-state {
+    border-style: solid;
+    border-color: var(--color-red-error);
+    background: #fff5f5;
+  }
+  .upload-icon { color: var(--color-gray-400); }
+  .upload-card.drag-over .upload-icon { color: var(--color-green-500); }
+  .upload-card.uploaded .upload-icon { color: var(--color-green-500); }
+  .upload-card.error-state .upload-icon { color: var(--color-red-error); }
+  .upload-title {
+    font-size: var(--text-base);
+    font-weight: var(--weight-medium);
+    color: var(--color-gray-700);
+  }
+  .upload-subtitle {
+    font-size: var(--text-xs);
+    color: var(--color-gray-400);
+  }
+  .upload-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    padding: 4px 10px;
+    border-radius: var(--radius-full);
+    margin-top: 4px;
+  }
+  .upload-badge.green { background: var(--color-green-100); color: var(--color-green-700); }
+  .upload-badge.red   { background: #fde8e6; color: var(--color-red-error); }
+
+  /* ─────────────────────────────────────────────
+     NAVBAR COMPONENT
+  ───────────────────────────────────────────── */
+  .navbar {
+    width: 180px;
+    background: var(--color-white);
+    border-right: 1px solid var(--color-gray-100);
+    padding: var(--space-5) 0;
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    flex-shrink: 0;
+  }
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 var(--space-4) var(--space-4);
+    font-size: 17px;
+    font-weight: var(--weight-semi);
+    letter-spacing: -0.03em;
+    border-bottom: 1px solid var(--color-gray-100);
+    margin-bottom: var(--space-3);
+  }
+  .nav-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px; height: 20px;
+    border-radius: var(--radius-full);
+    background: var(--color-green-500);
+    color: var(--color-white);
+    font-size: 10px;
+    font-weight: var(--weight-semi);
+    margin-left: auto;
+    padding: 0 5px;
+  }
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: var(--weight-semi);
+    letter-spacing: 0.10em;
+    text-transform: uppercase;
+    color: var(--color-gray-300);
+    padding: var(--space-3) var(--space-4) var(--space-1);
+  }
+  .nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px var(--space-4);
+    font-size: var(--text-base);
+    color: var(--color-gray-600, #555);
+    cursor: pointer;
+    transition: background var(--duration-fast);
+    border-left: 2.5px solid transparent;
+    position: relative;
+  }
+  .nav-item:hover { background: var(--color-gray-50); color: var(--color-black); }
+  .nav-item.active {
+    color: var(--color-black);
+    font-weight: var(--weight-medium);
+    border-left-color: var(--color-black);
+    background: var(--color-gray-50);
+  }
+  .nav-item svg { width: 16px; height: 16px; flex-shrink: 0; }
+  .nav-sub {
+    padding-left: var(--space-8);
+    font-size: var(--text-sm);
+    color: var(--color-gray-500);
+    padding-top: 6px;
+    padding-bottom: 6px;
+    cursor: pointer;
+  }
+  .nav-sub:hover { color: var(--color-black); }
+  .nav-footer {
+    margin-top: auto;
+    padding: var(--space-4);
+    border-top: 1px solid var(--color-gray-100);
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    transition: background var(--duration-fast);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+  .nav-footer:hover { background: var(--color-gray-50); }
+  .nav-avatar {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-200);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: var(--weight-semi);
+    color: var(--color-gray-600, #555);
+    flex-shrink: 0;
+  }
+  .nav-user-name { font-size: 13px; font-weight: var(--weight-medium); }
+  .nav-user-org  { font-size: 11px; color: var(--color-gray-500); }
+
+  /* ─────────────────────────────────────────────
+     SELECTION CARD COMPONENT
+  ───────────────────────────────────────────── */
+  .select-card {
+    border: 1.5px solid var(--color-gray-200);
+    border-radius: var(--radius-lg);
+    background: var(--color-white);
+    padding: var(--space-6) var(--space-5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+    transition: border-color var(--duration-fast), box-shadow var(--duration-fast);
+    width: 160px;
+    text-align: center;
+  }
+  .select-card:hover {
+    border-color: var(--color-gray-400);
+    box-shadow: var(--shadow-md);
+  }
+  .select-card.selected {
+    border-color: var(--color-black);
+    box-shadow: 0 0 0 3px rgba(0,0,0,0.07);
+  }
+  .select-card svg { color: var(--color-gray-500); width: 28px; height: 28px; }
+  .select-card.selected svg { color: var(--color-black); }
+  .select-card-label { font-size: var(--text-sm); color: var(--color-gray-700); }
+  .select-card.selected .select-card-label { font-weight: var(--weight-medium); color: var(--color-black); }
+
+  /* ─────────────────────────────────────────────
+     BADGE / TAG COMPONENT
+  ───────────────────────────────────────────── */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: var(--text-xs);
+    font-weight: var(--weight-medium);
+    padding: 3px 10px;
+    border-radius: var(--radius-full);
+  }
+  .badge-green   { background: var(--color-green-100);  color: var(--color-green-700); }
+  .badge-gray    { background: var(--color-gray-100);   color: var(--color-gray-700);  }
+  .badge-black   { background: var(--color-black);       color: var(--color-white);     }
+  .badge-amber   { background: #FFF3E0;                  color: var(--color-amber-warn); }
+  .badge-red     { background: #fde8e6;                  color: var(--color-red-error);  }
+
+  /* ─────────────────────────────────────────────
+     RECIPIENT LIST ITEM
+  ───────────────────────────────────────────── */
+  .recipient-item {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border: 1.5px solid var(--color-gray-100);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    cursor: pointer;
+    transition: border-color var(--duration-fast), background var(--duration-fast);
+    width: 340px;
+  }
+  .recipient-item:hover { border-color: var(--color-gray-300); background: var(--color-gray-50); }
+  .recipient-item.selected { border-color: var(--color-black); background: var(--color-white); }
+  .recipient-avatar {
+    width: 32px; height: 32px;
+    border-radius: var(--radius-sm);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: var(--weight-semi);
+    color: var(--color-white);
+    flex-shrink: 0;
+  }
+  .av-green { background: var(--color-green-500); }
+  .av-blue  { background: #4A7FD6; }
+  .av-teal  { background: #3AADA8; }
+  .av-orange{ background: #E07B3A; }
+  .av-red   { background: #D94F3A; }
+  .recipient-name { font-size: var(--text-base); }
+
+  /* ─────────────────────────────────────────────
+     STEP PROGRESS BAR
+  ───────────────────────────────────────────── */
+  .step-bar { display: flex; gap: 6px; width: 340px; }
+  .step-seg {
+    flex: 1;
+    height: 4px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-200);
+  }
+  .step-seg.done { background: var(--color-black); }
+
+  /* ─────────────────────────────────────────────
+     MODAL / DIALOG COMPONENT
+  ───────────────────────────────────────────── */
+  .modal-wrap {
+    position: relative;
+    width: 400px;
+    background: var(--color-white);
+    border-radius: var(--radius-xl);
+    box-shadow: var(--shadow-lg);
+    padding: var(--space-6);
+  }
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-5);
+  }
+  .modal-title { font-size: var(--text-lg); font-weight: var(--weight-semi); }
+  .modal-close {
+    width: 28px; height: 28px;
+    border-radius: var(--radius-full);
+    border: none;
+    background: var(--color-gray-100);
+    color: var(--color-gray-600, #555);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    transition: background var(--duration-fast);
+  }
+  .modal-close:hover { background: var(--color-gray-200); }
+
+  /* ─────────────────────────────────────────────
+     SUMMARY / DETAIL ROW
+  ───────────────────────────────────────────── */
+  .summary-card {
+    background: var(--color-gray-50);
+    border: 1px solid var(--color-gray-100);
+    border-radius: var(--radius-lg);
+    padding: var(--space-5);
+    width: 420px;
+  }
+  .summary-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-2) 0;
+    font-size: var(--text-base);
+  }
+  .summary-row + .summary-row {
+    border-top: 1px solid var(--color-gray-100);
+  }
+  .summary-key { color: var(--color-gray-500); }
+  .summary-val { font-weight: var(--weight-medium); }
+  .summary-val.green { color: var(--color-green-700); }
+  .summary-val.blue  { color: var(--color-blue-link); }
+
+  /* ─────────────────────────────────────────────
+     CHECKBOX COMPONENT
+  ───────────────────────────────────────────── */
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    cursor: pointer;
+  }
+  .checkbox-box {
+    width: 18px; height: 18px;
+    border-radius: 5px;
+    border: 1.5px solid var(--color-gray-300);
+    background: var(--color-white);
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    transition: border-color var(--duration-fast), background var(--duration-fast);
+  }
+  .checkbox-box.checked {
+    background: var(--color-black);
+    border-color: var(--color-black);
+  }
+  .checkbox-box.checked svg { display: block; }
+  .checkbox-box svg { display: none; color: #fff; width: 10px; height: 10px; }
+  .checkbox-label { font-size: var(--text-base); color: var(--color-gray-700); }
+
+  /* ─────────────────────────────────────────────
+     TOGGLE COMPONENT
+  ───────────────────────────────────────────── */
+  .toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+  }
+  .toggle-track {
+    width: 40px; height: 22px;
+    border-radius: var(--radius-full);
+    background: var(--color-gray-200);
+    position: relative;
+    cursor: pointer;
+    transition: background var(--duration-normal);
+  }
+  .toggle-track.on { background: var(--color-black); }
+  .toggle-thumb {
+    position: absolute;
+    top: 3px; left: 3px;
+    width: 16px; height: 16px;
+    border-radius: var(--radius-full);
+    background: var(--color-white);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    transition: left var(--duration-normal) var(--ease-out);
+  }
+  .toggle-track.on .toggle-thumb { left: 21px; }
+  .toggle-label { font-size: var(--text-sm); color: var(--color-gray-700); }
+
+  /* ─────────────────────────────────────────────
+     SUCCESS STATE COMPONENT
+  ───────────────────────────────────────────── */
+  .success-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-10);
+    text-align: center;
+  }
+  .success-icon-circle {
+    width: 72px; height: 72px;
+    border-radius: var(--radius-full);
+    background: var(--color-green-100);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .success-icon-circle svg { width: 32px; height: 32px; color: var(--color-green-500); }
+  .success-title { font-size: var(--text-xl); font-weight: var(--weight-semi); }
+  .success-subtitle { font-size: var(--text-base); color: var(--color-gray-500); }
+  .success-highlight { color: var(--color-green-500); font-weight: var(--weight-medium); }
+
+  /* ─────────────────────────────────────────────
+     DIVIDER
+  ───────────────────────────────────────────── */
+  .divider {
+    height: 1px;
+    background: var(--color-gray-100);
+    margin: var(--space-6) 0;
+  }
+  .divider-or {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    color: var(--color-gray-400);
+    font-size: var(--text-xs);
+  }
+  .divider-or::before, .divider-or::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--color-gray-200);
+  }
+
+  /* ─────────────────────────────────────────────
+     SPACING SCALE VIZ
+  ───────────────────────────────────────────── */
+  .spacing-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    padding: 6px 0;
+  }
+  .spacing-bar { height: 8px; background: var(--color-black); border-radius: 2px; }
+  .spacing-info { font-size: 11px; font-family: var(--font-mono); color: var(--color-gray-500); }
+
+  /* ─────────────────────────────────────────────
+     MISC UTIL
+  ───────────────────────────────────────────── */
+  .mt-2 { margin-top: var(--space-2); }
+  .mt-4 { margin-top: var(--space-4); }
+  .mb-2 { margin-bottom: var(--space-2); }
+
+  .color-gray-400 { color: var(--color-gray-400); }
+  svg { display: block; }
+</style>
+</head>
+<body>
+<div class="ds-page">
+
+  <!-- COVER -->
+  <div class="ds-cover">
+    <div class="ds-cover-logo">
+      <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2Z" fill="#2A9D5C" opacity=".15"/>
+        <path d="M8 14C8 10.686 10.686 8 14 8s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6Z" fill="#2A9D5C"/>
+      </svg>
+      venn
+    </div>
+    <div class="ds-cover-meta">
+      Design System v1.0<br>
+      <span style="color:var(--color-gray-400)">Transfers UI · 2025</span>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════
+       1. FOUNDATIONS
+  ══════════════════════════════════════════ -->
+
+  <!-- 1A. COLOR -->
+  <section class="ds-section">
+    <p class="ds-section-title">01 — Colors</p>
+
+    <p class="ds-label mb-2" style="margin-bottom:12px">Brand</p>
+    <div class="swatch-grid" style="margin-bottom:24px">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#2A9D5C"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Green 500</span>
+          <span class="swatch-hex">#2A9D5C · primary</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#3DBF72"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Green 400</span>
+          <span class="swatch-hex">#3DBF72 · hover</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#D6F2E3"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Green 100</span>
+          <span class="swatch-hex">#D6F2E3 · bg tint</span>
+        </div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#EEF9F4"></div>
+        <div class="swatch-info">
+          <span class="swatch-name">Green 50</span>
+          <span class="swatch-hex">#EEF9F4 · subtle bg</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="ds-label mb-2" style="margin-bottom:12px">Neutrals</p>
+    <div class="swatch-grid" style="margin-bottom:24px">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#0D0D0D"></div>
+        <div class="swatch-info"><span class="swatch-name">Black</span><span class="swatch-hex">#0D0D0D</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#3D3D3D"></div>
+        <div class="swatch-info"><span class="swatch-name">Gray 700</span><span class="swatch-hex">#3D3D3D</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#6B6B6B"></div>
+        <div class="swatch-info"><span class="swatch-name">Gray 500</span><span class="swatch-hex">#6B6B6B</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#B3B3B3"></div>
+        <div class="swatch-info"><span class="swatch-name">Gray 300</span><span class="swatch-hex">#B3B3B3</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#D9D9D9"></div>
+        <div class="swatch-info"><span class="swatch-name">Gray 200</span><span class="swatch-hex">#D9D9D9 · border</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#F0F0F0"></div>
+        <div class="swatch-info"><span class="swatch-name">Gray 100</span><span class="swatch-hex">#F0F0F0</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#F8F8F8"></div>
+        <div class="swatch-info"><span class="swatch-name">Gray 50</span><span class="swatch-hex">#F8F8F8 · bg</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#FFFFFF; border:1px solid #eee"></div>
+        <div class="swatch-info"><span class="swatch-name">White</span><span class="swatch-hex">#FFFFFF</span></div>
+      </div>
+    </div>
+
+    <p class="ds-label mb-2" style="margin-bottom:12px">Semantic</p>
+    <div class="swatch-grid">
+      <div class="swatch">
+        <div class="swatch-color" style="background:#D93025"></div>
+        <div class="swatch-info"><span class="swatch-name">Error</span><span class="swatch-hex">#D93025</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#E07B00"></div>
+        <div class="swatch-info"><span class="swatch-name">Warning</span><span class="swatch-hex">#E07B00</span></div>
+      </div>
+      <div class="swatch">
+        <div class="swatch-color" style="background:#1A5CCC"></div>
+        <div class="swatch-info"><span class="swatch-name">Link</span><span class="swatch-hex">#1A5CCC</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1B. TYPOGRAPHY -->
+  <section class="ds-section">
+    <p class="ds-section-title">02 — Typography</p>
+    <div class="ds-card">
+      <div class="type-specimen">
+        <div class="type-row">
+          <div class="type-meta">Display<br>30px / Semi / –0.03em</div>
+          <div style="font-size:30px;font-weight:600;letter-spacing:-0.03em;line-height:1.2">Confirm and send transfer</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Heading 1<br>24px / Semi / –0.02em</div>
+          <div style="font-size:24px;font-weight:600;letter-spacing:-0.02em;line-height:1.2">Who do you want to transfer to?</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Heading 2<br>20px / Semi</div>
+          <div style="font-size:20px;font-weight:600;line-height:1.3">Review payment method</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Subheading<br>16px / Medium</div>
+          <div style="font-size:16px;font-weight:500">Choose a payment method</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Body Default<br>14px / Regular</div>
+          <div style="font-size:14px;line-height:1.5">Upload an invoice and we'll automatically fill in payment details</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Body Small<br>12px / Regular</div>
+          <div style="font-size:12px;color:#6B6B6B;line-height:1.5">File type must be a JPEG, PNG, PDF (max. 10 MB)</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Caption / Label<br>11px / Semi / 0.12em UC</div>
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:#B3B3B3">Recently paid</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Mono / Code<br>12px / 400 · DM Mono</div>
+          <div style="font-size:12px;font-family:'DM Mono',monospace;color:#6B6B6B">325325523 · 1 CAD = 0.7250 USD</div>
+        </div>
+        <div class="type-row">
+          <div class="type-meta">Link<br>14px / Regular</div>
+          <div style="font-size:14px;color:#1A5CCC">Current balance: $812,443.41</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1C. SPACING -->
+  <section class="ds-section">
+    <p class="ds-section-title">03 — Spacing Scale</p>
+    <div class="ds-card">
+      <div class="ds-row" style="flex-direction:column;gap:6px">
+        <div class="spacing-row"><div class="spacing-bar" style="width:4px"></div><span class="spacing-info">space-1 · 4px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:8px"></div><span class="spacing-info">space-2 · 8px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:12px"></div><span class="spacing-info">space-3 · 12px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:16px"></div><span class="spacing-info">space-4 · 16px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:20px"></div><span class="spacing-info">space-5 · 20px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:24px"></div><span class="spacing-info">space-6 · 24px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:32px"></div><span class="spacing-info">space-8 · 32px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:40px"></div><span class="spacing-info">space-10 · 40px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:48px"></div><span class="spacing-info">space-12 · 48px</span></div>
+        <div class="spacing-row"><div class="spacing-bar" style="width:64px"></div><span class="spacing-info">space-16 · 64px</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 1D. ICONS -->
+  <section class="ds-section">
+    <p class="ds-section-title">04 — Icons</p>
+    <div class="icon-grid">
+      <!-- Dashboard -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span class="icon-name">dashboard</span>
+      </div>
+      <!-- Transactions -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+        <span class="icon-name">transactions</span>
+      </div>
+      <!-- Accounts -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        <span class="icon-name">accounts</span>
+      </div>
+      <!-- Transfer -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+        <span class="icon-name">transfers</span>
+      </div>
+      <!-- Send -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span class="icon-name">send</span>
+      </div>
+      <!-- Clock / Scheduled -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span class="icon-name">scheduled</span>
+      </div>
+      <!-- Invoices -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        <span class="icon-name">invoices</span>
+      </div>
+      <!-- Cards -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+        <span class="icon-name">cards</span>
+      </div>
+      <!-- Reporting -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        <span class="icon-name">reporting</span>
+      </div>
+      <!-- Investments -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        <span class="icon-name">investments</span>
+      </div>
+      <!-- Accounting -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        <span class="icon-name">accounting</span>
+      </div>
+      <!-- Search -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <span class="icon-name">search</span>
+      </div>
+      <!-- Upload -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+        <span class="icon-name">upload</span>
+      </div>
+      <!-- Arrow back -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        <span class="icon-name">arrow-back</span>
+      </div>
+      <!-- Arrow right -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        <span class="icon-name">arrow-right</span>
+      </div>
+      <!-- Chevron right -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        <span class="icon-name">chevron-right</span>
+      </div>
+      <!-- Chevron down -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+        <span class="icon-name">chevron-down</span>
+      </div>
+      <!-- X close -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        <span class="icon-name">close</span>
+      </div>
+      <!-- Check -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        <span class="icon-name">check</span>
+      </div>
+      <!-- Company -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+        <span class="icon-name">company</span>
+      </div>
+      <!-- Individual -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        <span class="icon-name">individual</span>
+      </div>
+      <!-- Tasks badge -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+        <span class="icon-name">tasks</span>
+      </div>
+      <!-- Sidebar toggle -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+        <span class="icon-name">sidebar</span>
+      </div>
+      <!-- Chat / support -->
+      <div class="icon-item">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        <span class="icon-name">support</span>
+      </div>
+    </div>
+    <p class="ds-label" style="margin-top:16px">Style: 20px · stroke-width 1.6 · stroke-linecap round · Feather-style outline</p>
+  </section>
+
+  <!-- ══════════════════════════════════════════
+       2. COMPONENTS
+  ══════════════════════════════════════════ -->
+
+  <!-- 2A. BUTTONS -->
+  <section class="ds-section">
+    <p class="ds-section-title">05 — Buttons</p>
+    <div class="ds-card">
+      <div class="ds-row" style="flex-direction:column;gap:32px">
+
+        <!-- Variants -->
+        <div>
+          <p class="ds-label mb-2">Variants</p>
+          <div class="ds-row" style="align-items:center;gap:12px;margin-top:8px">
+            <div class="ds-col">
+              <button class="btn btn-primary">Send transfer</button>
+              <span class="ds-label">Primary</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-secondary">Back</button>
+              <span class="ds-label">Secondary</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-ghost">Cancel</button>
+              <span class="ds-label">Ghost</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-danger">Delete</button>
+              <span class="ds-label">Danger</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sizes -->
+        <div>
+          <p class="ds-label mb-2">Sizes</p>
+          <div class="ds-row" style="align-items:center;gap:12px;margin-top:8px">
+            <div class="ds-col">
+              <button class="btn btn-primary btn-sm">Continue</button>
+              <span class="ds-label">Small · 12px</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary">Continue</button>
+              <span class="ds-label">Medium · 14px</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary btn-lg">Continue →</button>
+              <span class="ds-label">Large · 16px</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- States -->
+        <div>
+          <p class="ds-label mb-2">States</p>
+          <div class="ds-row" style="align-items:center;gap:12px;margin-top:8px">
+            <div class="ds-col">
+              <button class="btn btn-primary">Default</button>
+              <span class="ds-label">Default</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary" style="background:#1A1A1A;box-shadow:0 4px 12px rgba(0,0,0,0.12)">Hover</button>
+              <span class="ds-label">Hover</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary" style="transform:translateY(1px)">Active</button>
+              <span class="ds-label">Active</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary btn-loading" style="min-width:120px">Loading</button>
+              <span class="ds-label">Loading</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary btn-disabled">Disabled</button>
+              <span class="ds-label">Disabled</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- With icon -->
+        <div>
+          <p class="ds-label mb-2">With Icon</p>
+          <div class="ds-row" style="align-items:center;gap:12px;margin-top:8px">
+            <div class="ds-col">
+              <button class="btn btn-primary">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                Send transfer
+              </button>
+              <span class="ds-label">Icon left</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-primary">
+                Continue →
+              </button>
+              <span class="ds-label">Text icon right</span>
+            </div>
+            <div class="ds-col">
+              <button class="btn btn-secondary btn-icon">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </button>
+              <span class="ds-label">Icon only</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Full width pair -->
+        <div style="max-width:440px">
+          <p class="ds-label mb-2">Full Width Pair (wizard footer)</p>
+          <div class="ds-row" style="gap:8px;margin-top:8px">
+            <button class="btn btn-secondary" style="flex:1">Back</button>
+            <button class="btn btn-primary" style="flex:2">Continue →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2B. INPUT FIELDS -->
+  <section class="ds-section">
+    <p class="ds-section-title">06 — Input Fields</p>
+    <div class="ds-card">
+      <div class="ds-row" style="flex-wrap:wrap;gap:32px">
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Legal business name</label>
+            <div class="input-wrap">
+              <input class="input-field" type="text" value="The Company" readonly>
+              <span class="input-icon-right">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+              </span>
+            </div>
+          </div>
+          <span class="ds-label">Default / Filled</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Nickname <span style="color:#B3B3B3;font-weight:400">(optional)</span></label>
+            <input class="input-field" type="text" placeholder="e.g. Main vendor" style="border-color:#0D0D0D;box-shadow:0 0 0 3px rgba(0,0,0,0.07)">
+          </div>
+          <span class="ds-label">Focus</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Email address<span class="req">*</span></label>
+            <div class="input-wrap">
+              <input class="input-field error" type="email" value="bad-email">
+              <span class="input-icon-right" style="color:var(--color-red-error)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+              </span>
+            </div>
+            <span class="input-hint error">Please enter a valid email address</span>
+          </div>
+          <span class="ds-label">Error</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Email address</label>
+            <div class="input-wrap">
+              <input class="input-field success" type="email" value="finance@company.com">
+              <span class="input-icon-right" style="color:var(--color-green-500)">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              </span>
+            </div>
+            <span class="input-hint success">Looks good!</span>
+          </div>
+          <span class="ds-label">Success</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Amount</label>
+            <div class="input-wrap">
+              <span class="input-prefix" style="font-weight:500">$</span>
+              <input class="input-field has-prefix" type="text" value="5,000" placeholder="0.00">
+            </div>
+          </div>
+          <span class="ds-label">With prefix</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Account number</label>
+            <input class="input-field" type="text" disabled value="325325523">
+          </div>
+          <span class="ds-label">Disabled</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group" style="width:300px">
+            <div class="input-search-wrap">
+              <span class="search-icon">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+              </span>
+              <input class="input-field search" type="text" placeholder="Search by company or individual name">
+            </div>
+          </div>
+          <span class="ds-label">Search</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="input-group">
+            <label class="input-label">Reference</label>
+            <textarea class="input-field" rows="3" placeholder="Add a note or reference..." style="resize:vertical;line-height:1.5"></textarea>
+          </div>
+          <span class="ds-label">Textarea</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2C. UPLOAD CARD -->
+  <section class="ds-section">
+    <p class="ds-section-title">07 — Upload Card</p>
+    <div class="ds-card">
+      <div class="ds-row" style="gap:24px;flex-wrap:wrap">
+
+        <div class="ds-col">
+          <div class="upload-card">
+            <span class="upload-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+            </span>
+            <p class="upload-title">Upload invoice</p>
+            <p class="upload-subtitle">File type must be a JPEG, PNG, PDF (max. 10 MB)</p>
+          </div>
+          <span class="ds-label">Default</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="upload-card drag-over">
+            <span class="upload-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+            </span>
+            <p class="upload-title">Drop file to upload</p>
+            <p class="upload-subtitle">Release to add your file</p>
+          </div>
+          <span class="ds-label">Drag over</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="upload-card uploaded">
+            <span class="upload-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </span>
+            <p class="upload-title">invoice_q4.pdf</p>
+            <p class="upload-subtitle">2.4 MB · Uploaded</p>
+            <span class="upload-badge green">
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+              Ready
+            </span>
+          </div>
+          <span class="ds-label">Uploaded</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="upload-card error-state">
+            <span class="upload-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            </span>
+            <p class="upload-title">Upload failed</p>
+            <p class="upload-subtitle">File too large or unsupported format</p>
+            <span class="upload-badge red">Try again</span>
+          </div>
+          <span class="ds-label">Error</span>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2D. NAVBAR -->
+  <section class="ds-section">
+    <p class="ds-section-title">08 — Navigation Sidebar</p>
+    <div class="ds-card">
+      <div class="ds-row" style="gap:40px;align-items:flex-start">
+        <!-- Full nav -->
+        <div>
+          <div class="navbar" style="height:580px;display:flex;flex-direction:column">
+            <div class="nav-logo">
+              <svg width="20" height="20" viewBox="0 0 28 28" fill="none"><path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2Z" fill="#2A9D5C" opacity=".2"/><path d="M8 14C8 10.686 10.686 8 14 8s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6Z" fill="#2A9D5C"/></svg>
+              venn
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#B3B3B3" stroke-width="1.6" stroke-linecap="round" style="margin-left:auto"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+            </div>
+
+            <div class="nav-item" style="gap:10px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+              Tasks
+              <span class="nav-badge">5</span>
+            </div>
+
+            <div class="nav-section-label">Platform</div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              Dashboard
+            </div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+              Transactions
+            </div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+              Accounts
+            </div>
+            <div class="nav-item active">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+              Transfers
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" style="margin-left:auto"><polyline points="6 9 12 15 18 9"/></svg>
+            </div>
+            <div class="nav-sub">Payables</div>
+            <div class="nav-sub">Recipients</div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+              Invoices
+            </div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Cards
+            </div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+              Reporting
+            </div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+              Investments
+            </div>
+            <div class="nav-item">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+              Accounting
+            </div>
+
+            <div style="flex:1"></div>
+            <div class="nav-footer">
+              <div class="nav-avatar">AM</div>
+              <div>
+                <div class="nav-user-name">Abdullah Memon</div>
+                <div class="nav-user-org">Abdullah's Company</div>
+              </div>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#B3B3B3" stroke-width="1.6" stroke-linecap="round" style="margin-left:auto"><polyline points="9 18 15 12 9 6"/></svg>
+            </div>
+          </div>
+          <span class="ds-label" style="margin-top:8px">Full sidebar</span>
+        </div>
+
+        <!-- Nav states breakdown -->
+        <div class="ds-col" style="gap:8px">
+          <p class="ds-label mb-2">Item States</p>
+          <div style="width:220px;background:var(--color-white);border-radius:var(--radius-md);overflow:hidden;border:1px solid var(--color-gray-100)">
+            <div class="nav-item" style="border-left:none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+              Default item
+            </div>
+            <div class="nav-item" style="background:var(--color-gray-50);color:var(--color-black);border-left:none">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Hovered item
+            </div>
+            <div class="nav-item active" style="border-left-color:var(--color-black)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+              Active item
+            </div>
+          </div>
+          <span class="ds-label">Default / Hover / Active</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2E. SELECTION CARD -->
+  <section class="ds-section">
+    <p class="ds-section-title">09 — Selection Cards</p>
+    <div class="ds-card">
+      <div class="ds-row" style="gap:24px;flex-wrap:wrap">
+        <div class="ds-col">
+          <div class="ds-row" style="gap:12px">
+            <div>
+              <div class="select-card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                <span class="select-card-label">One time transfer</span>
+              </div>
+            </div>
+            <div>
+              <div class="select-card selected">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                <span class="select-card-label">Scheduled transfer</span>
+              </div>
+            </div>
+          </div>
+          <span class="ds-label">Default / Selected</span>
+        </div>
+
+        <div class="ds-col">
+          <div class="ds-row" style="gap:12px">
+            <div>
+              <div class="select-card selected">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+                <span class="select-card-label">Company</span>
+              </div>
+            </div>
+            <div>
+              <div class="select-card">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                <span class="select-card-label">Individual</span>
+              </div>
+            </div>
+          </div>
+          <span class="ds-label">Recipient type picker</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2F. RECIPIENT LIST -->
+  <section class="ds-section">
+    <p class="ds-section-title">10 — Recipient List Items</p>
+    <div class="ds-card">
+      <div class="ds-col" style="gap:8px">
+        <div class="recipient-item">
+          <div class="recipient-avatar av-green">GA</div>
+          <span class="recipient-name">General Assembly</span>
+        </div>
+        <div class="recipient-item selected">
+          <div class="recipient-avatar av-blue">EG</div>
+          <span class="recipient-name">Elmwood Accounting Group</span>
+        </div>
+        <div class="recipient-item">
+          <div class="recipient-avatar av-teal">DC</div>
+          <span class="recipient-name">Driftwood Commerce</span>
+        </div>
+        <div class="recipient-item">
+          <div class="recipient-avatar av-orange">RC</div>
+          <span class="recipient-name">Redcrest Contracting</span>
+        </div>
+        <div class="recipient-item">
+          <div class="recipient-avatar av-red">NG</div>
+          <span class="recipient-name">Northloop Growth</span>
+        </div>
+      </div>
+      <span class="ds-label" style="margin-top:8px">Default / Selected states · Avatar colours cycle</span>
+    </div>
+  </section>
+
+  <!-- 2G. STEP PROGRESS BAR -->
+  <section class="ds-section">
+    <p class="ds-section-title">11 — Step Progress Bar</p>
+    <div class="ds-card">
+      <div class="ds-col" style="gap:16px">
+        <div>
+          <div class="step-bar">
+            <div class="step-seg done"></div>
+            <div class="step-seg"></div>
+            <div class="step-seg"></div>
+            <div class="step-seg"></div>
+            <div class="step-seg"></div>
+          </div>
+          <span class="ds-label" style="margin-top:6px">Step 1 of 5 — Transfer type</span>
+        </div>
+        <div>
+          <div class="step-bar">
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg"></div>
+            <div class="step-seg"></div>
+            <div class="step-seg"></div>
+          </div>
+          <span class="ds-label" style="margin-top:6px">Step 2 of 5 — Recipient</span>
+        </div>
+        <div>
+          <div class="step-bar">
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg"></div>
+            <div class="step-seg"></div>
+          </div>
+          <span class="ds-label" style="margin-top:6px">Step 3 of 5 — Amount</span>
+        </div>
+        <div>
+          <div class="step-bar">
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg"></div>
+          </div>
+          <span class="ds-label" style="margin-top:6px">Step 4 of 5 — Review</span>
+        </div>
+        <div>
+          <div class="step-bar">
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+            <div class="step-seg done"></div>
+          </div>
+          <span class="ds-label" style="margin-top:6px">Step 5 of 5 — Complete</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2H. BADGES -->
+  <section class="ds-section">
+    <p class="ds-section-title">12 — Badges & Tags</p>
+    <div class="ds-card">
+      <div class="ds-row" style="gap:12px;align-items:center;flex-wrap:wrap">
+        <div class="ds-col"><span class="badge badge-green">Success</span><span class="ds-label">Green</span></div>
+        <div class="ds-col"><span class="badge badge-gray">Pending</span><span class="ds-label">Gray</span></div>
+        <div class="ds-col"><span class="badge badge-black">New</span><span class="ds-label">Black</span></div>
+        <div class="ds-col"><span class="badge badge-amber">In review</span><span class="ds-label">Amber</span></div>
+        <div class="ds-col"><span class="badge badge-red">Failed</span><span class="ds-label">Red</span></div>
+        <div class="ds-col">
+          <span class="badge badge-green" style="padding:4px 12px;font-size:13px">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+            Sent
+          </span>
+          <span class="ds-label">With icon</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2I. CHECKBOX & TOGGLE -->
+  <section class="ds-section">
+    <p class="ds-section-title">13 — Checkbox & Toggle</p>
+    <div class="ds-card">
+      <div class="ds-row" style="gap:48px;align-items:flex-start;flex-wrap:wrap">
+
+        <div class="ds-col" style="gap:16px">
+          <p class="ds-label">Checkbox</p>
+          <div class="checkbox-row">
+            <div class="checkbox-box"></div>
+            <span class="checkbox-label">Send transfer confirmation email to recipient</span>
+          </div>
+          <div class="checkbox-row">
+            <div class="checkbox-box checked">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span class="checkbox-label">Send transfer confirmation email to recipient</span>
+          </div>
+          <div class="checkbox-row" style="opacity:0.4;cursor:not-allowed">
+            <div class="checkbox-box"></div>
+            <span class="checkbox-label">Disabled option</span>
+          </div>
+        </div>
+
+        <div class="ds-col" style="gap:16px">
+          <p class="ds-label">Toggle</p>
+          <div class="toggle-wrap">
+            <div class="toggle-track">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label">Off</span>
+          </div>
+          <div class="toggle-wrap">
+            <div class="toggle-track on">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label">On</span>
+          </div>
+          <div class="toggle-wrap" style="opacity:0.4">
+            <div class="toggle-track on">
+              <div class="toggle-thumb"></div>
+            </div>
+            <span class="toggle-label">Disabled</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- 2J. MODAL -->
+  <section class="ds-section">
+    <p class="ds-section-title">14 — Modal / Dialog</p>
+    <div class="ds-card">
+      <div class="modal-wrap">
+        <div class="modal-header">
+          <h2 class="modal-title">Add new recipient</h2>
+          <button class="modal-close">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+          </button>
+        </div>
+        <div class="ds-row" style="gap:10px;margin-bottom:20px">
+          <div class="select-card selected" style="width:auto;padding:14px 24px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+            <span class="select-card-label" style="font-size:13px">Company</span>
+          </div>
+          <div class="select-card" style="width:auto;padding:14px 24px">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="width:22px;height:22px"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            <span class="select-card-label" style="font-size:13px">Individual</span>
+          </div>
+        </div>
+        <div class="ds-col" style="gap:14px">
+          <div class="input-group" style="width:100%">
+            <label class="input-label">Legal business name</label>
+            <div class="input-wrap">
+              <input class="input-field" type="text" value="The Company" style="width:100%">
+            </div>
+          </div>
+          <div class="input-group" style="width:100%">
+            <label class="input-label">Email address</label>
+            <input class="input-field" type="email" value="finance@thecompany.com" style="width:100%">
+          </div>
+        </div>
+        <p style="font-size:11px;color:var(--color-gray-400);margin-top:12px">Address is optional but may be required for some payment methods</p>
+        <div class="ds-row" style="gap:8px;margin-top:20px">
+          <button class="btn btn-secondary" style="flex:1">Cancel</button>
+          <button class="btn btn-primary" style="flex:2">Add recipient</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2K. SUMMARY CARD -->
+  <section class="ds-section">
+    <p class="ds-section-title">15 — Summary / Detail Card</p>
+    <div class="ds-card">
+      <div class="summary-card">
+        <div class="summary-row">
+          <span class="summary-key">You Send</span>
+          <span class="summary-val">$5,000.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Fee</span>
+          <span class="summary-val blue">$0.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Your Total</span>
+          <span class="summary-val">$5,000.00</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Exchanged Amount</span>
+          <span class="summary-val">US$3,624.76</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Exchange Rate</span>
+          <span class="summary-val blue">1 CAD = 0.7250 USD</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Account</span>
+          <span class="summary-val">CAD Account</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">To</span>
+          <span class="summary-val">Elmwood Accounting Group</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Payment Method</span>
+          <span class="summary-val">ACH Payment</span>
+        </div>
+        <div class="summary-row">
+          <span class="summary-key">Account Number</span>
+          <span class="summary-val" style="font-family:var(--font-mono);font-size:13px">325325523</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2L. SUCCESS STATE -->
+  <section class="ds-section">
+    <p class="ds-section-title">16 — Success State</p>
+    <div class="ds-card">
+      <div class="success-state">
+        <div class="success-icon-circle">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h2 class="success-title">Your transfer has been sent!</h2>
+        <p class="success-subtitle">You've saved up to <span class="success-highlight">$150.00</span> on this transfer using Venn.</p>
+        <div class="ds-row" style="gap:10px;margin-top:8px">
+          <button class="btn btn-secondary">Refer &amp; Earn $500</button>
+          <button class="btn btn-primary">Send another transfer</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2M. PAYMENT METHOD CARD -->
+  <section class="ds-section">
+    <p class="ds-section-title">17 — Payment Method Card</p>
+    <div class="ds-card">
+      <div class="ds-col" style="gap:10px;max-width:440px">
+        <div style="border:1.5px solid var(--color-black);border-radius:var(--radius-md);padding:14px 16px;background:var(--color-white);display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <p style="font-weight:var(--weight-medium);font-size:var(--text-base)">EFT Payment (CAD)</p>
+            <p style="font-size:var(--text-xs);color:var(--color-gray-500);font-family:var(--font-mono);margin-top:2px">123232321</p>
+          </div>
+          <div style="text-align:right">
+            <p style="font-size:var(--text-sm);color:var(--color-blue-link);font-weight:var(--weight-medium)">Fee $0.00</p>
+            <p style="font-size:var(--text-xs);color:var(--color-gray-400);margin-top:2px">Arrives 1–2 business days</p>
+          </div>
+        </div>
+        <div style="border:1.5px solid var(--color-gray-200);border-radius:var(--radius-md);padding:14px 16px;background:var(--color-white);display:flex;justify-content:space-between;align-items:center;">
+          <div>
+            <p style="font-size:var(--text-base);color:var(--color-gray-700)">SWIFT Payment (CAD)</p>
+            <p style="font-size:var(--text-xs);color:var(--color-gray-500);font-family:var(--font-mono);margin-top:2px">324234324</p>
+          </div>
+          <div style="text-align:right">
+            <p style="font-size:var(--text-sm);color:var(--color-gray-700)">Fee $6.00</p>
+            <p style="font-size:var(--text-xs);color:var(--color-gray-400);margin-top:2px">Arrives 1–2 business days</p>
+          </div>
+        </div>
+        <span class="ds-label">Selected (black border) / Unselected</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2N. DIVIDERS -->
+  <section class="ds-section">
+    <p class="ds-section-title">18 — Dividers</p>
+    <div class="ds-card" style="max-width:400px">
+      <p style="font-size:14px;color:var(--color-gray-700)">Section A</p>
+      <div class="divider"></div>
+      <p style="font-size:14px;color:var(--color-gray-700)">Section B</p>
+      <div style="margin:24px 0">
+        <div class="divider-or">or</div>
+      </div>
+      <div class="divider-or">select a recipient</div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <div style="padding-top:var(--space-8);border-top:1px solid var(--color-gray-200);display:flex;justify-content:space-between;align-items:center">
+    <div class="ds-cover-logo" style="font-size:15px">
+      <svg viewBox="0 0 28 28" fill="none" style="width:20px;height:20px"><path d="M14 2C7.373 2 2 7.373 2 14s5.373 12 12 12 12-5.373 12-12S20.627 2 14 2Z" fill="#2A9D5C" opacity=".15"/><path d="M8 14C8 10.686 10.686 8 14 8s6 2.686 6 6-2.686 6-6 6-6-2.686-6-6Z" fill="#2A9D5C"/></svg>
+      venn — Design System v1.0
+    </div>
+    <span style="font-size:11px;color:var(--color-gray-400);font-family:var(--font-mono)">DM Sans · Feather Icons · 18 components</span>
+  </div>
+
+</div>
+</body>
+</html>
