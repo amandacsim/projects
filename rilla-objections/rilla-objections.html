@@ -4,13 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Rilla – Objections</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
+  :root {
+    --neutral-1: #1b1b1b;
+    --neutral-2: #262626;
+    --neutral-3: #373737;
+    --neutral-4: #414141;
+    --brand-yellow: #ebe300;
+    --success: #b9deb7;
+  }
+
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
   body {
-    background: #1a1a1a;
-    color: #e0e0e0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: var(--neutral-1);
+    color: #e8e8e8;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 14px;
     min-height: 100vh;
     overflow-x: hidden;
@@ -20,10 +32,11 @@
   .topnav {
     display: flex;
     align-items: center;
-    background: #111111;
-    border-bottom: 1px solid #2a2a2a;
+    justify-content: space-between;
+    background: var(--neutral-1);
+    border-bottom: 1px solid var(--neutral-3);
     height: 52px;
-    padding: 0 16px;
+    padding: 0 16px 1px;
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
@@ -32,15 +45,15 @@
   .logo-area {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-right: 28px;
+    padding-right: 28px;
+    flex-shrink: 0;
   }
 
-  .logo-area svg {
+  .logo-area img {
     width: 32px;
     height: 20px;
+    display: block;
   }
-  .logo-area svg path { fill: #e8c84a; }
 
   .nav-links {
     display: flex;
@@ -53,19 +66,17 @@
     padding: 6px 12px;
     border-radius: 6px;
     color: #aaa;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
     cursor: pointer;
     white-space: nowrap;
-    transition: color 0.15s;
     text-decoration: none;
     display: flex;
     align-items: center;
     gap: 6px;
   }
-  .nav-link:hover { color: #e0e0e0; }
   .nav-link.active {
-    background: #2a2a2a;
+    background: #404040;
     color: #ffffff;
   }
 
@@ -73,7 +84,7 @@
     background: #3a3a3a;
     color: #ccc;
     font-size: 11px;
-    font-weight: 600;
+    font-weight: 700;
     padding: 1px 6px;
     border-radius: 10px;
   }
@@ -82,57 +93,63 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: auto;
+    flex-shrink: 0;
   }
 
   .btn-masters {
-    background: #e8c84a;
+    background: var(--brand-yellow);
     color: #111;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
-    padding: 6px 12px;
+    padding: 7px 12px;
     border-radius: 6px;
     border: none;
     cursor: pointer;
     white-space: nowrap;
+    font-family: 'Inter', sans-serif;
   }
 
   .btn-revenue {
     display: flex;
     align-items: center;
     gap: 6px;
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
-    color: #e0e0e0;
-    font-size: 13px;
-    font-weight: 600;
-    padding: 6px 12px;
+    background: var(--neutral-2);
+    border: 1px solid var(--brand-yellow);
+    color: var(--brand-yellow);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 7px 13px;
     border-radius: 6px;
     cursor: pointer;
+    font-family: 'Inter', sans-serif;
   }
-  .btn-revenue .coin-icon {
-    font-size: 14px;
+
+  .btn-revenue img {
+    width: 16px;
+    height: 16px;
+    display: block;
   }
 
   .nav-icon {
-    width: 32px;
-    height: 32px;
+    width: 16px;
+    height: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #888;
     cursor: pointer;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: color 0.15s;
   }
-  .nav-icon:hover { color: #ddd; }
+
+  .nav-icon img {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
 
   .avatar {
     width: 32px;
     height: 32px;
     background: #4a90d9;
-    border-radius: 50%;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -153,12 +170,13 @@
   .sidebar {
     width: 210px;
     min-width: 210px;
-    background: #111111;
-    border-right: 1px solid #2a2a2a;
-    padding: 16px 12px;
+    background: var(--neutral-2);
+    border-right: 1px solid var(--neutral-3);
+    padding: 16px 13px 16px 12px;
     display: flex;
     flex-direction: column;
     gap: 6px;
+    min-height: 930px;
   }
 
   .company-header {
@@ -166,47 +184,54 @@
     align-items: center;
     gap: 8px;
     padding: 8px 10px;
-    margin-bottom: 8px;
   }
 
   .company-icon {
     width: 28px;
     height: 28px;
-    background: #e8c84a;
-    border-radius: 6px;
+    background: rgba(235, 227, 0, 0.5);
+    border-radius: 4px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .company-icon img {
+    width: 16px;
+    height: 16px;
+    display: block;
   }
 
   .company-name {
     font-size: 14px;
-    font-weight: 600;
+    font-weight: 700;
     color: #e8e8e8;
   }
 
-  .sidebar-btn {
+  .sidebar-active-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
+    gap: 6px;
+    padding: 6px 12px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 500;
-    color: #e0e0e0;
-    cursor: pointer;
-    background: #2a2a2a;
+    color: #ffffff;
+    background: #404040;
     border: none;
     text-align: left;
     width: 100%;
+    cursor: pointer;
+    font-family: 'Inter', sans-serif;
   }
 
   .sidebar-section-label {
-    font-size: 10px;
-    font-weight: 600;
+    font-size: 12px;
+    font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.8px;
     color: #666;
     padding: 12px 10px 4px;
   }
@@ -214,17 +239,13 @@
   .sidebar-item {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
+    gap: 6px;
+    padding: 6px 12px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: 14px;
+    font-weight: 500;
     color: #aaa;
     cursor: pointer;
-    transition: background 0.15s, color 0.15s;
-  }
-  .sidebar-item:hover {
-    background: #1e1e1e;
-    color: #e0e0e0;
   }
 
   /* ── MAIN CONTENT ── */
@@ -232,61 +253,79 @@
     flex: 1;
     padding: 28px 32px;
     overflow-y: auto;
+    background: var(--neutral-1);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
   }
 
   .main-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 24px;
+    flex-shrink: 0;
+    width: 100%;
   }
 
   .main-title {
-    font-size: 22px;
+    font-size: 20px;
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.22px;
   }
 
   .collapse-btn {
-    width: 28px;
-    height: 28px;
-    background: #2a2a2a;
-    border: 1px solid #3a3a3a;
+    width: 38px;
+    height: 31px;
+    background: var(--neutral-2);
+    border: 1px solid var(--neutral-3);
     border-radius: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #888;
+    padding: 7px 11px;
+    flex-shrink: 0;
   }
 
-  /* ── OBJECTION ROWS ── */
+  .collapse-btn img {
+    width: 16px;
+    height: 16px;
+    display: block;
+  }
+
+  /* ── OBJECTION CARDS ── */
   .objection-list {
     display: flex;
     flex-direction: column;
-    gap: 0;
+    gap: 16px;
+    flex-shrink: 0;
+    width: 100%;
   }
 
-  .objection-row {
+  .objection-card {
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: space-between;
-    padding: 18px 0;
-    border-bottom: 1px solid #252525;
+    padding: 16px;
+    background: var(--neutral-2);
+    border-radius: 8px;
     cursor: pointer;
-    transition: background 0.1s;
   }
-  .objection-row:first-child { border-top: 1px solid #252525; }
-  .objection-row:hover { background: rgba(255,255,255,0.02); }
 
-  .objection-left { flex: 1; }
+  .objection-left {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
 
   .objection-title {
     font-size: 14px;
     font-weight: 500;
     color: #e8e8e8;
-    margin-bottom: 8px;
+    line-height: 1;
   }
 
   .objection-meta {
@@ -295,66 +334,80 @@
     gap: 8px;
   }
 
-  .meta-pill {
+  /* Pill: label-box + value-box */
+  .pill {
     display: flex;
     align-items: center;
     gap: 5px;
-    background: #252525;
-    border: 1px solid #333;
-    border-radius: 5px;
-    padding: 3px 9px;
-    font-size: 12px;
-    color: #999;
+    background: var(--neutral-3);
+    border-radius: 2px;
+    padding-left: 6px;
+    flex-shrink: 0;
   }
 
-  .meta-pill .label { color: #777; }
-  .meta-pill .value { color: #e0e0e0; font-weight: 500; }
-  .meta-pill .value.yellow { color: #e8c84a; font-weight: 600; }
-
-  .objection-right {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding-left: 20px;
-  }
-
-  .category-tag {
-    display: flex;
-    align-items: center;
-    gap: 5px;
+  .pill-label {
     font-size: 12px;
-    color: #888;
+    font-weight: 400;
+    color: #777;
     white-space: nowrap;
   }
-  .category-tag::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #888;
-    display: inline-block;
+
+  .pill-value {
+    background: var(--neutral-4);
+    border-radius: 2px;
+    padding: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
   }
 
-  .settings-icon {
-    color: #666;
-    font-size: 16px;
-    cursor: pointer;
+  .pill-value.white { color: #ffffff; }
+  .pill-value.yellow { color: var(--brand-yellow); }
+  .pill-value.green  { color: var(--success); }
+
+  /* Category tag */
+  .tag {
+    background: #313231;
+    border-radius: 100px;
+    padding: 4px 8px;
     display: flex;
     align-items: center;
+    flex-shrink: 0;
+    margin-left: 16px;
   }
 
+  .tag-inner {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .tag-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 3px;
+    background: #ffffff;
+    flex-shrink: 0;
+  }
+
+  .tag-label {
+    font-size: 11.1px;
+    font-weight: 400;
+    color: #ffffff;
+    white-space: nowrap;
+  }
 </style>
 </head>
 <body>
 
 <!-- TOP NAV -->
 <nav class="topnav">
+  <!-- Logo -->
   <div class="logo-area">
-    <svg viewBox="0 0 65 40" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M29.0003 0C30.6503 0 32.3003 0 34.0003 0C36.1236 5.87996 37.5277 11.9329 39.0003 18C39.9903 17.67 40.9803 17.34 42.0003 17C43.0335 14.2083 43.0335 14.2083 43.6878 10.9375C44.0649 9.28041 44.0649 9.28041 44.4495 7.58984C44.6313 6.7352 44.8131 5.88055 45.0003 5C46.3203 5.33 47.6403 5.66 49.0003 6C49.1821 6.78246 49.3638 7.56492 49.5511 8.37109C49.8025 9.38301 50.0538 10.3949 50.3128 11.4375C50.5565 12.4468 50.8001 13.4562 51.0511 14.4961C51.3643 15.3224 51.6776 16.1487 52.0003 17C52.9903 17.33 53.9803 17.66 55.0003 18C55.6603 15.36 56.3203 12.72 57.0003 10C58.3203 10.33 59.6403 10.66 61.0003 11C61.2891 12.1344 61.5778 13.2687 61.8753 14.4375C62.2466 15.6131 62.6178 16.7888 63.0003 18C63.6603 18.33 64.3203 18.66 65.0003 19C65.0003 19.66 65.0003 20.32 65.0003 21C64.5466 21.4125 64.0928 21.825 63.6253 22.25C61.4605 24.5814 60.8733 26.9783 60.0003 30C59.0103 29.67 58.0203 29.34 57.0003 29C56.3337 26.6667 55.667 24.3333 55.0003 22C54.0103 21.67 53.0203 21.34 52.0003 21C51.0103 25.29 50.0203 29.58 49.0003 34C47.6803 34 46.3603 34 45.0003 34C44.0103 29.71 43.0203 25.42 42.0003 21C38.0182 22.4693 38.0182 22.4693 37.179 24.7876C36.9591 25.8402 36.9591 25.8402 36.7347 26.9141C36.5671 27.6746 36.3995 28.4352 36.2269 29.2188C36.0696 30.0128 35.9124 30.8069 35.7503 31.625C35.5776 32.4268 35.4049 33.2286 35.2269 34.0547C34.8029 36.0333 34.3996 38.0163 34.0003 40C32.3503 40 30.7003 40 29.0003 40C27.3535 33.6924 25.7372 27.4847 25.0003 21C23.6803 21 22.3603 21 21.0003 21C20.8792 21.7593 20.758 22.5185 20.6331 23.3008C20.4656 24.2946 20.298 25.2885 20.1253 26.3125C19.9629 27.2986 19.8005 28.2848 19.6331 29.3008C19.0003 32 19.0003 32 17.0003 35C15.5153 34.505 15.5153 34.505 14.0003 34C13.0511 31.2773 13.0511 31.2773 12.3128 27.9375C12.0615 26.8328 11.8101 25.728 11.5511 24.5898C11.3693 23.7352 11.1876 22.8805 11.0003 22C10.0103 22 9.02032 22 8.00032 22C7.34032 24.64 6.68032 27.28 6.00032 30C5.01032 30 4.02032 30 3.00032 30C2.49199 28.7534 1.99401 27.5025 1.50032 26.25C1.22189 25.5539 0.943449 24.8578 0.656574 24.1406C-0.528884 20.2738 0.0515699 17.3719 1.50032 13.75C1.77876 13.0436 2.0572 12.3372 2.34407 11.6094C2.66892 10.8127 2.66892 10.8127 3.00032 10C3.99032 10 4.98032 10 6.00032 10C6.66032 12.64 7.32032 15.28 8.00032 18C8.99032 18 9.98032 18 11.0003 18C11.9903 14.04 12.9803 10.08 14.0003 6C15.3203 5.67 16.6403 5.34 18.0003 5C18.9903 8.96 19.9803 12.92 21.0003 17C22.3203 17 23.6403 17 25.0003 17C26.3203 11.39 27.6403 5.78 29.0003 0Z" fill="#e8c84a"/>
-    </svg>
+    <img src="https://www.figma.com/api/mcp/asset/86dea360-d5ca-4943-9d04-b66ae992ad1b" alt="Rilla logo">
   </div>
 
+  <!-- Nav links -->
   <div class="nav-links">
     <a class="nav-link" href="#">Ridealongs</a>
     <a class="nav-link" href="#">
@@ -368,26 +421,21 @@
     <a class="nav-link active" href="#">Objections</a>
   </div>
 
+  <!-- Right side -->
   <div class="nav-right">
     <button class="btn-masters">Rilla Masters 2025</button>
     <button class="btn-revenue">
-      <span class="coin-icon">🏅</span>
+      <img src="https://www.figma.com/api/mcp/asset/eceda3c4-5b52-46e6-8abd-4192988ca34d" alt="gift">
       $114,412
     </button>
     <div class="nav-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
-      </svg>
+      <img src="https://www.figma.com/api/mcp/asset/57c2029f-05da-4389-9060-cac57b414a53" alt="microphone">
     </div>
     <div class="nav-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-      </svg>
+      <img src="https://www.figma.com/api/mcp/asset/3423932f-c0ba-438d-9240-b002f86d8bb6" alt="bell">
     </div>
     <div class="nav-icon">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
-      </svg>
+      <img src="https://www.figma.com/api/mcp/asset/75140450-6ec9-46c4-b6dd-8bd8d486738f" alt="settings">
     </div>
     <div class="avatar">JB</div>
   </div>
@@ -399,15 +447,17 @@
   <!-- SIDEBAR -->
   <aside class="sidebar">
     <div class="company-header">
-      <div class="company-icon">⚠️</div>
+      <div class="company-icon">
+        <img src="https://www.figma.com/api/mcp/asset/89459701-11a4-4ee3-8830-3e911c74caf8" alt="home">
+      </div>
       <span class="company-name">Company X</span>
     </div>
 
-    <button class="sidebar-btn">All Objections</button>
+    <button class="sidebar-active-btn">All Objections</button>
 
     <div class="sidebar-section-label">Category</div>
     <div class="sidebar-item">Company</div>
-    <div class="sidebar-item">Tline</div>
+    <div class="sidebar-item">Time</div>
     <div class="sidebar-item">Technician</div>
     <div class="sidebar-item">Price</div>
     <div class="sidebar-item">Solution</div>
@@ -418,136 +468,147 @@
     <div class="main-header">
       <h1 class="main-title">Objections</h1>
       <div class="collapse-btn">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="15 18 9 12 15 6"/>
-        </svg>
+        <img src="https://www.figma.com/api/mcp/asset/b0be8ac0-74f2-45c7-bd9a-35d4a94f3f25" alt="collapse">
       </div>
     </div>
 
     <div class="objection-list">
 
-      <!-- Row 1 -->
-      <div class="objection-row">
+      <!-- Card 1 -->
+      <div class="objection-card">
         <div class="objection-left">
           <div class="objection-title">Confusion about pricing or discrepancies with previous quotes</div>
           <div class="objection-meta">
-            <div class="meta-pill">
-              <span class="label">Frequency</span>
-              <span class="value">158</span>
+            <div class="pill">
+              <span class="pill-label">Frequency</span>
+              <span class="pill-value white">158</span>
             </div>
-            <div class="meta-pill">
-              <span class="label">Close Rate Impact</span>
-              <span class="value yellow">0.66</span>
+            <div class="pill">
+              <span class="pill-label">Close Rate Impact</span>
+              <span class="pill-value green">0.66</span>
             </div>
           </div>
         </div>
-        <div class="objection-right">
-          <div class="category-tag">Technician</div>
+        <div class="tag">
+          <div class="tag-inner">
+            <div class="tag-dot"></div>
+            <span class="tag-label">Technician</span>
+          </div>
         </div>
       </div>
 
-      <!-- Row 2 -->
-      <div class="objection-row">
+      <!-- Card 2 -->
+      <div class="objection-card">
         <div class="objection-left">
           <div class="objection-title">Affordability and budget constraints</div>
           <div class="objection-meta">
-            <div class="meta-pill">
-              <span class="label">Frequency</span>
-              <span class="value">11453</span>
+            <div class="pill">
+              <span class="pill-label">Frequency</span>
+              <span class="pill-value white">11453</span>
             </div>
-            <div class="meta-pill">
-              <span class="label">Close Rate Impact</span>
-              <span class="value yellow">0.65</span>
+            <div class="pill">
+              <span class="pill-label">Close Rate Impact</span>
+              <span class="pill-value yellow">0.65</span>
             </div>
           </div>
         </div>
-        <div class="objection-right">
-          <div class="category-tag">Price</div>
+        <div class="tag">
+          <div class="tag-inner">
+            <div class="tag-dot"></div>
+            <span class="tag-label">Price</span>
+          </div>
         </div>
       </div>
 
-      <!-- Row 3 -->
-      <div class="objection-row">
+      <!-- Card 3 -->
+      <div class="objection-card">
         <div class="objection-left">
           <div class="objection-title">High cost of services or repairs</div>
           <div class="objection-meta">
-            <div class="meta-pill">
-              <span class="label">Frequency</span>
-              <span class="value">3278</span>
+            <div class="pill">
+              <span class="pill-label">Frequency</span>
+              <span class="pill-value white">3278</span>
             </div>
-            <div class="meta-pill">
-              <span class="label">Close Rate Impact</span>
-              <span class="value yellow">0.65</span>
+            <div class="pill">
+              <span class="pill-label">Close Rate Impact</span>
+              <span class="pill-value yellow">0.65</span>
             </div>
           </div>
         </div>
-        <div class="objection-right">
-          <div class="category-tag">Price</div>
-          <div class="settings-icon">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-            </svg>
+        <div class="tag">
+          <div class="tag-inner">
+            <div class="tag-dot"></div>
+            <span class="tag-label">Price</span>
           </div>
         </div>
       </div>
 
-      <!-- Row 4 -->
-      <div class="objection-row">
+      <!-- Card 4 -->
+      <div class="objection-card">
         <div class="objection-left">
           <div class="objection-title">Concerns about financing options and interest rates</div>
           <div class="objection-meta">
-            <div class="meta-pill">
-              <span class="label">Frequency</span>
-              <span class="value">14</span>
+            <div class="pill">
+              <span class="pill-label">Frequency</span>
+              <span class="pill-value white">14</span>
             </div>
-            <div class="meta-pill">
-              <span class="label">Close Rate Impact</span>
-              <span class="value" style="color: #e8a84a; font-weight:600;">0.57</span>
+            <div class="pill">
+              <span class="pill-label">Close Rate Impact</span>
+              <span class="pill-value yellow">0.57</span>
             </div>
           </div>
         </div>
-        <div class="objection-right">
-          <div class="category-tag">Price</div>
+        <div class="tag">
+          <div class="tag-inner">
+            <div class="tag-dot"></div>
+            <span class="tag-label">Price</span>
+          </div>
         </div>
       </div>
 
-      <!-- Row 5 -->
-      <div class="objection-row">
+      <!-- Card 5 -->
+      <div class="objection-card">
         <div class="objection-left">
           <div class="objection-title">Uncertainty about the necessity of repairs or upgrades</div>
           <div class="objection-meta">
-            <div class="meta-pill">
-              <span class="label">Frequency</span>
-              <span class="value">415</span>
+            <div class="pill">
+              <span class="pill-label">Frequency</span>
+              <span class="pill-value white">415</span>
             </div>
-            <div class="meta-pill">
-              <span class="label">Close Rate Impact</span>
-              <span class="value" style="color: #e8a84a; font-weight:600;">0.55</span>
+            <div class="pill">
+              <span class="pill-label">Close Rate Impact</span>
+              <span class="pill-value yellow">0.55</span>
             </div>
           </div>
         </div>
-        <div class="objection-right">
-          <div class="category-tag">Timo</div>
+        <div class="tag">
+          <div class="tag-inner">
+            <div class="tag-dot"></div>
+            <span class="tag-label">Time</span>
+          </div>
         </div>
       </div>
 
-      <!-- Row 6 -->
-      <div class="objection-row">
+      <!-- Card 6 -->
+      <div class="objection-card">
         <div class="objection-left">
           <div class="objection-title">Concerns about the quality or reliability of previous work</div>
           <div class="objection-meta">
-            <div class="meta-pill">
-              <span class="label">Frequency</span>
-              <span class="value">212</span>
+            <div class="pill">
+              <span class="pill-label">Frequency</span>
+              <span class="pill-value white">212</span>
             </div>
-            <div class="meta-pill">
-              <span class="label">Close Rate Impact</span>
-              <span class="value" style="color: #e8a84a; font-weight:600;">0.55</span>
+            <div class="pill">
+              <span class="pill-label">Close Rate Impact</span>
+              <span class="pill-value yellow">0.55</span>
             </div>
           </div>
         </div>
-        <div class="objection-right">
-          <div class="category-tag">Company</div>
+        <div class="tag">
+          <div class="tag-inner">
+            <div class="tag-dot"></div>
+            <span class="tag-label">Company</span>
+          </div>
         </div>
       </div>
 
