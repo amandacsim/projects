@@ -22,13 +22,17 @@
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
+  /* Hide scrollbars globally */
+  *, *::before, *::after { scrollbar-width: none; -ms-overflow-style: none; }
+  *::-webkit-scrollbar { display: none; }
+
   body {
     background: var(--neutral-1);
     color: #e8e8e8;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     font-size: 14px;
-    min-height: 100vh;
-    overflow-x: hidden;
+    height: 100vh;
+    overflow: hidden;
   }
 
   /* ── TOP NAV ── */
@@ -199,7 +203,8 @@
   .layout {
     display: flex;
     margin-top: 52px;
-    min-height: calc(100vh - 52px);
+    height: calc(100vh - 52px);
+    overflow: hidden;
   }
 
   /* ── LEFT SIDEBAR ── */
@@ -212,7 +217,8 @@
     display: flex;
     flex-direction: column;
     gap: 6px;
-    min-height: calc(100vh - 52px);
+    height: 100%;
+    overflow-y: auto;
   }
 
   .company-header {
@@ -222,9 +228,7 @@
     padding: 8px 10px;
     border-radius: 6px;
     cursor: pointer;
-    transition: background var(--transition);
   }
-  .company-header:hover { background: var(--neutral-3); }
 
   .company-icon {
     width: 28px;
@@ -298,6 +302,7 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
+    height: 100%;
   }
 
   .main-header {
@@ -426,6 +431,10 @@
     display: flex;
     align-items: center;
     flex-shrink: 0;
+    margin-left: 0;
+  }
+  /* Only add left margin when tag is inside an objection card */
+  .objection-card .tag {
     margin-left: 16px;
   }
 
@@ -683,15 +692,21 @@
     gap: 0;
     padding: 0;
     overflow: hidden;
-    height: calc(100vh - 52px);
     align-items: stretch;
   }
+  /* Both list-view and detail-view get proper column layout inside row */
+  .main.rick-ai-open #list-view,
   .main.rick-ai-open #detail-view {
     flex: 1;
     min-width: 0;
     overflow-y: auto;
     padding: 28px 32px;
     gap: 24px;
+  }
+  /* Hide the toggle buttons when Rick AI is open */
+  .main.rick-ai-open #back-btn,
+  .main.rick-ai-open #list-collapse-btn {
+    display: none;
   }
 
   /* Rick AI panel */
@@ -761,20 +776,48 @@
     background: var(--brand-yellow);
     border-radius: 8px 0 0 8px;
   }
-  .rick-ai-input-text {
+  .rick-ai-input {
     flex: 1;
     font-size: 14px;
     font-weight: 500;
-    color: #aaa;
+    color: #e8e8e8;
+    background: transparent;
+    border: none;
+    outline: none;
     padding-left: 12px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    cursor: text;
+    font-family: 'Inter', sans-serif;
+    caret-color: var(--brand-yellow);
   }
-  .rick-ai-input-text .cursor-bar {
-    color: #ffffff;
-    font-weight: 500;
+  .rick-ai-input::placeholder {
+    color: #aaa;
+  }
+
+  /* Chat messages area */
+  .rick-ai-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 12px;
+    overflow-y: auto;
+    padding-bottom: 16px;
+  }
+
+  /* User chat bubble */
+  .chat-bubble {
+    display: flex;
+    justify-content: flex-end;
+  }
+  .chat-bubble-inner {
+    background: var(--neutral-3);
+    color: #e8e8e8;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 1.5;
+    padding: 10px 14px;
+    border-radius: 12px 12px 2px 12px;
+    max-width: 80%;
+    word-break: break-word;
   }
   .rick-ai-send-btn {
     width: 32px;
@@ -799,14 +842,6 @@
     color: #111;
     stroke: #111;
   }
-
-  /* Back-btn icon switching:
-     default = chevron-right (Rick AI is closed, click to open right panel)
-     .rick-open = chevron-left (Rick AI is open, click to close right panel) */
-  .collapse-btn .icon-chevron-right { display: block; }
-  .collapse-btn .icon-chevron-left  { display: none; }
-  .collapse-btn.rick-open .icon-chevron-right { display: none; }
-  .collapse-btn.rick-open .icon-chevron-left  { display: block; }
 
   /* Conversations footer */
   .convos-footer {
@@ -919,10 +954,9 @@
     <div id="list-view">
     <div class="main-header">
       <h1 class="main-title">Objections</h1>
-      <div class="collapse-btn" title="Collapse">
-        <!-- chevron-left.svg inline -->
+      <div id="list-collapse-btn" class="collapse-btn" title="Open Rick AI">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M15 18L9 12L15 6"/>
+          <path d="M9 18L15 12L9 6"/>
         </svg>
       </div>
     </div>
@@ -1080,14 +1114,9 @@
           <span> / </span>
           <span class="bc-bold">Affordability and budget constraints</span>
         </div>
-        <div id="back-btn" class="collapse-btn" title="Toggle Rick AI">
-          <!-- chevron-right: shown when Rick AI is closed -->
-          <svg class="icon-chevron-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <div id="back-btn" class="collapse-btn" title="Open Rick AI">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M9 18L15 12L9 6"/>
-          </svg>
-          <!-- chevron-left: shown when Rick AI is open -->
-          <svg class="icon-chevron-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 18L9 12L15 6"/>
           </svg>
         </div>
       </div>
@@ -1097,7 +1126,7 @@
         <div class="detail-text-block">
           <div class="detail-title">Affordability and budget constraints</div>
           <div class="detail-description">The customer expressed uncertainty about the cost of flooring and whether to invest in tile or linoleum due to concerns about how long they would stay in the property.</div>
-          <div class="tag" style="align-self:flex-start;">
+          <div class="tag" style="align-self:flex-start; margin-left:0;">
             <div class="tag-inner">
               <div class="tag-dot"></div>
               <span class="tag-label">Price</span>
@@ -1305,13 +1334,18 @@
           </svg>
         </div>
       </div>
-      <!-- Body (empty space + message input at bottom) -->
+      <!-- Body: messages + input at bottom -->
       <div class="rick-ai-body">
+        <div id="rick-ai-messages" class="rick-ai-messages"></div>
         <div class="rick-ai-input-card">
-          <div class="rick-ai-input-text">
-            <span class="cursor-bar">|</span>Message Rick
-          </div>
-          <button class="rick-ai-send-btn" title="Send">
+          <input
+            id="rick-ai-input"
+            class="rick-ai-input"
+            type="text"
+            placeholder="Message Rick"
+            autocomplete="off"
+          />
+          <button id="rick-ai-send" class="rick-ai-send-btn" title="Send">
             <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
               <path d="M12 19V5M12 5L5 12M12 5L19 12" stroke="#111"/>
             </svg>
@@ -1331,34 +1365,26 @@
   const rickAiPanel       = document.getElementById('rick-ai-panel');
   const cardAffordability = document.getElementById('card-affordability');
   const backBtn           = document.getElementById('back-btn');
+  const listCollapseBtn   = document.getElementById('list-collapse-btn');
   const rickAiClose       = document.getElementById('rick-ai-close');
   const breadcrumbBack    = document.getElementById('breadcrumb-back');
   const mainEl            = document.querySelector('.main');
 
-  /* ── Rick AI panel helpers ── */
+  /* ── Rick AI panel ── */
   function openRickAi() {
-    rickAiPanel.classList.add('open');
-    backBtn.classList.add('rick-open');
     mainEl.classList.add('rick-ai-open');
-    // Ensure detail-view is in row-ready flex mode
-    detailView.style.display = 'flex';
-    detailView.style.flexDirection = 'column';
+    rickAiPanel.classList.add('open');
   }
 
   function closeRickAi() {
-    rickAiPanel.classList.remove('open');
-    backBtn.classList.remove('rick-open');
     mainEl.classList.remove('rick-ai-open');
-    // Restore detail-view normal padding (handled by CSS when rick-ai-open removed)
-    detailView.style.flexDirection = 'column';
+    rickAiPanel.classList.remove('open');
   }
 
   /* ── View navigation ── */
   function showDetailView() {
     listView.style.display = 'none';
     detailView.style.display = 'flex';
-    detailView.style.flexDirection = 'column';
-    // Mark Price as active in sidebar
     navItems.forEach(n => n.classList.remove('active'));
     const priceItem = document.querySelector('[data-filter="Price"]');
     if (priceItem) priceItem.classList.add('active');
@@ -1368,44 +1394,57 @@
     closeRickAi();
     detailView.style.display = 'none';
     listView.style.display = 'flex';
-    // Restore 'all' active + show all cards
     navItems.forEach(n => n.classList.remove('active'));
     const allItem = document.querySelector('[data-filter="all"]');
     if (allItem) allItem.classList.add('active');
     cards.forEach(card => card.classList.remove('hidden'));
   }
 
-  // Card 2 → open detail
+  // Card 2 → open detail view
   cardAffordability.addEventListener('click', showDetailView);
 
-  // Back-btn in detail view → toggle Rick AI panel
-  backBtn.addEventListener('click', () => {
-    if (rickAiPanel.classList.contains('open')) {
-      closeRickAi();
-    } else {
-      openRickAi();
-    }
-  });
+  // Both toggle buttons open Rick AI (they disappear once open via CSS)
+  backBtn.addEventListener('click', openRickAi);
+  listCollapseBtn.addEventListener('click', openRickAi);
 
-  // X button inside Rick AI header → close panel
+  // X button inside Rick AI header → close panel (buttons reappear via CSS)
   rickAiClose.addEventListener('click', closeRickAi);
+
+  /* ── Rick AI chat ── */
+  const rickAiInput    = document.getElementById('rick-ai-input');
+  const rickAiSend     = document.getElementById('rick-ai-send');
+  const rickAiMessages = document.getElementById('rick-ai-messages');
+
+  function sendMessage() {
+    const text = rickAiInput.value.trim();
+    if (!text) return;
+    const bubble = document.createElement('div');
+    bubble.className = 'chat-bubble';
+    bubble.innerHTML = `<div class="chat-bubble-inner">${text.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>`;
+    rickAiMessages.appendChild(bubble);
+    rickAiMessages.scrollTop = rickAiMessages.scrollHeight;
+    rickAiInput.value = '';
+    rickAiInput.focus();
+  }
+
+  rickAiSend.addEventListener('click', sendMessage);
+  rickAiInput.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+  });
 
   // Breadcrumb "Objections" → return to list view
   breadcrumbBack.addEventListener('click', showListView);
 
-  // Sidebar filter (works in both views)
+  // Sidebar filter
   navItems.forEach(item => {
     item.addEventListener('click', () => {
-      // If in detail view, go back to list first
       if (detailView.style.display === 'flex') {
         detailView.style.display = 'none';
         listView.style.display = 'flex';
         closeRickAi();
       }
-      // Update active state
       navItems.forEach(n => n.classList.remove('active'));
       item.classList.add('active');
-      // Apply filter
       const filter = item.dataset.filter;
       cards.forEach(card => {
         const match = filter === 'all' || card.dataset.category === filter;
